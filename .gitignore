@@ -1,1 +1,5 @@
 node_modules/
+.env.*
+!.env.*.template
+*.tar.gz
+bundle/

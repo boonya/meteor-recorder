@@ -1,0 +1,34 @@
+version: '3'
+services:
+  recorder:
+    container_name: recorder
+    image: boonya/video-recorder
+    build: .
+    depends_on:
+      - mongo
+    network_mode: host
+    volumes:
+      - /media/Recorder/:/media/Recorder/:rw
+      - /etc/localtime:/etc/localtime:ro
+    env_file:
+     - .env.recorder
+    environment:
+      NODE_ENV: development
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo/initdb.d/:/docker-entrypoint-initdb.d/:ro
+      - mongo-configdb:/data/configdb
+      - mongo-db:/data/db
+    env_file:
+     - .env.mongo
+    restart: unless-stopped
+
+volumes:
+  mongo-configdb:
+  mongo-db:
