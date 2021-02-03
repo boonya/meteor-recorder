@@ -2,19 +2,19 @@ name: Lint and test
 
 on:
   push:
-    tags-ignore:
-      - '*'
     paths-ignore:
       - '**.md'
       - 'LICENCE'
   pull_request:
+    paths-ignore:
+      - '**.md'
+      - 'LICENCE'
 
 defaults:
   run:
     shell: bash
 
 jobs:
-
   lint:
     runs-on: ubuntu-20.04
     steps:
@@ -24,7 +24,6 @@ jobs:
           node-version: 12.20.1
       - run: npm ci
       - run: npm run lint
-
   test:
     runs-on: ubuntu-20.04
     steps:

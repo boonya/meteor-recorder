@@ -1,15 +1,10 @@
 name: "Verify, build and create artifacts"
 
 on:
-  push:
-    branches:
-      - main
-      - develop
-    tags:
-      - 'v*'
+  release:
+    types: [prereleased, published]
 
 jobs:
-
   lint:
     runs-on: ubuntu-20.04
     steps:
@@ -32,9 +27,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-20.04
-    needs:
-      - lint
-      - test
+    needs: [lint, test]
     steps:
       - uses: actions/checkout@v1
       - uses: meteorengineer/setup-meteor@v1
