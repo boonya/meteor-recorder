@@ -3,7 +3,7 @@ name: release
 on:
   push:
     tags:
-      - '*'
+      - 'v*'
   release:
     types: [edited, published]
 
@@ -61,7 +61,7 @@ jobs:
       - name: Upload application bundle to the artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: app.tar.gz
+          name: recorder.tar.gz
           path: meteor-ip-cam-recorder.tar.gz
 
       - name: Retrieve UPLOAD_URL
@@ -69,10 +69,11 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         run: |
           TAG=$(echo ${{ github.ref }} | cut -d'/' -f 3)
-          upload_url=$(curl -sL https://api.github.com/repos/boonya/meteor-ip-cam-recorder/releases/tags/${TAG} | jq -r '.upload_url')
+          upload_url=$(curl -sL https://api.github.com/repos/boonya/meteor-ip-cam-recorder/releases/tags/${{ TAG }} | jq -r '.upload_url')
           echo ::set-output name=UPLOAD_URL::$upload_url
-          echo "::debug::${UPLOAD_URL}"
-          echo "::debug::${TAG}"
+          echo ::set-output name=TAG::$TAG
+          echo "::debug::${{ UPLOAD_URL }}"
+          echo "::debug::${{ TAG }}"
         shell: bash
 
       - name: Upload Release Assets
@@ -82,5 +83,5 @@ jobs:
         with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
           asset_path: meteor-ip-cam-recorder.tar.gz
-          asset_name: app.tar.gz
+          asset_name: recorder-${{ steps.get_release.outputs.tag }}.tar.gz
           asset_content_type: application/gzip
