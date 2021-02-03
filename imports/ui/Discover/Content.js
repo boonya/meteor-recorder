@@ -1,5 +1,6 @@
-import React from 'react'
 import Item from './Item';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 export default function Content({pending, processing, error, list, added}) {
 	if (pending) {
@@ -11,7 +12,7 @@ export default function Content({pending, processing, error, list, added}) {
 	}
 
 	if (error) {
-		return <pre>{JSON.stringify(error, null, "\t")}</pre>;
+		return <pre>{JSON.stringify(error, null, '\t')}</pre>;
 	}
 
 	if (list.length === 0) {
@@ -24,3 +25,17 @@ export default function Content({pending, processing, error, list, added}) {
 		</ul>
 	);
 }
+
+Content.propTypes = {
+	added: PropTypes.arrayOf(PropTypes.string).isRequired,
+	error: PropTypes.instanceOf(Error),
+	list: PropTypes.arrayOf(PropTypes.shape({hostname: PropTypes.string.isRequired})).isRequired,
+	pending: PropTypes.bool,
+	processing: PropTypes.bool,
+};
+
+Content.defaultProps = {
+	error: undefined,
+	pending: false,
+	processing: false,
+};

@@ -1,5 +1,5 @@
-import METHODS from '../imports/methods';
 import {discover, create, remove, toggle} from '../imports/api/camera';
+import METHODS from '../imports/methods';
 
 export default (recorder) => Meteor.methods({
 	[METHODS.CAMERA_DISCOVER]: discover,

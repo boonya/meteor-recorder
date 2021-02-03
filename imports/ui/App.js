@@ -1,6 +1,6 @@
-import React from 'react';
-import List from './List';
 import Discover from './Discover';
+import List from './List';
+import React from 'react';
 
 export function App() {
 	return (

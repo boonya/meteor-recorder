@@ -1,7 +1,7 @@
-import React from 'react'
-import {useTracker} from 'meteor/react-meteor-data';
 import Collection from '../../api/camera';
 import Item from './Item';
+import {useTracker} from 'meteor/react-meteor-data';
+import React from 'react';
 
 export default function List() {
 	const list = useTracker(() => Collection.find().fetch());

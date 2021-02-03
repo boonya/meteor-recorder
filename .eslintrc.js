@@ -7,7 +7,7 @@ module.exports = {
 	extends: [
 		'bluedrop',
 		'bluedrop/config/node',
-		'bluedrop/config/babel',
+		// 'bluedrop/config/babel',
 	],
 	globals: {
 		NODE_ENV: true,
@@ -19,7 +19,7 @@ module.exports = {
 	settings: {
 		'import/resolver': 'meteor',
 		react: {
-			version: '16.3',
+			version: '17.0',
 		},
 	},
 	rules: {

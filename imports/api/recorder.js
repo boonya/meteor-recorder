@@ -1,23 +1,20 @@
-import {EventEmitter} from 'events';
-import RtspRecorder, {RecorderEvents} from 'rtsp-video-recorder';
-import {getStream} from './camera';
 import {RECORDER} from '../config';
 import {CAMERA_STATE} from '../constants';
+import {logInfo, logError} from '../utils/logger';
+import {getStream} from './camera';
+import {EventEmitter} from 'events';
+import RtspRecorder, {RecorderEvents} from 'rtsp-video-recorder';
 
 const log = (event) => (...args) => {
-	console.log(new Date().toString());
-	console.log(`Event "${event}": `, ...args);
-	console.log();
+	logInfo(`Event "${event}" \nat ${new Date().toString()}:`)(...args);
 };
 
 export const Events = {
 	INIT: 'init',
 	INITIALIZED: 'initialized',
-
 	START: 'start',
 	STARTED: 'started',
-
-	STOP: 'stopp',
+	STOP: 'stop',
 	STOPPED: 'stopped',
 };
 
@@ -38,20 +35,23 @@ export default class Recorder {
 				}
 			}
 			catch (err) {
-				console.error(err);
-				return;
+				logError('Camera failed to initialize.')({_id, title, hostname, err});
 			}
 		});
 	}
 
-	_createRecorder(uri, title) {
+	_createRecorder(_id, uri, title) {
 		const recorder = new RtspRecorder(uri, RECORDER.FOLDER, {
 			title,
-			filePattern: title && `${title.replace(/%/g, '%%').replace(/ /g, '_')}/%Y.%m.%d/%H.%M.%S`,
+			filePattern: title && `${title.replace(/%/ug, '%%').replace(/ /ug, '_')}/%Y.%m.%d/%H.%M.%S`,
 			segmentTime: RECORDER.SEGMENT_TIME,
 			dirSizeThreshold: RECORDER.DIR_SIZE_THRESHOLD,
 			autoClear: RECORDER.AUTO_CLEAR,
 		});
+
+		recorder
+			.on(RecorderEvents.STARTED, (...args) => this.eventEmitter.emit(Events.STARTED, _id, ...args))
+			.on(RecorderEvents.STOPPED, (...args) => this.eventEmitter.emit(Events.STOPPED, _id, ...args));
 
 		recorder
 			.on(RecorderEvents.STARTED, log(RecorderEvents.STARTED))
@@ -69,51 +69,38 @@ export default class Recorder {
 
 	async init(_id, title, hostname, port, username, password) {
 		const {uri} = await getStream(hostname, port, username, password);
-		const recorder = this._createRecorder(uri, title);
-		recorder
-			.on(RecorderEvents.STARTED, (...args) => this.eventEmitter.emit(Events.STARTED, _id, ...args))
-			.on(RecorderEvents.STOPPED, (...args) => this.eventEmitter.emit(Events.STOPPED, _id, ...args));
+		const recorder = this._createRecorder(_id, uri, title);
 		this.process.set(_id, recorder);
 		return recorder;
 	}
 
 	start(_id) {
-		try {
-			const recorder = this.process.get(_id);
-			if (recorder.isRecording()) {
-				return;
-			}
-			recorder.start();
-			this.process.set(_id, recorder);
+		const recorder = this.process.get(_id);
+		if (recorder.isRecording()) {
+			return;
 		}
-		catch (err) {
-			console.log({process: this.process, _id});
-			throw err;
-		}
+		recorder.start();
+		this.process.set(_id, recorder);
 	}
 
 	stop(_id) {
-		try {
-			const recorder = this.process.get(_id);
-			if (!recorder.isRecording()) {
-				return;
-			}
-			recorder.stop();
-			this.process.set(_id, recorder);
+		const recorder = this.process.get(_id);
+		if (!recorder.isRecording()) {
+			return;
 		}
-		catch (err) {
-			console.log({process: this.process, _id});
-			throw err;
-		}
+		recorder.stop();
+		this.process.set(_id, recorder);
 	}
 
+	// eslint-disable-next-line promise/prefer-await-to-callbacks
 	on(eventType, callback) {
 		this.eventEmitter.on(eventType, callback);
 		return this;
 	}
 
+	// eslint-disable-next-line promise/prefer-await-to-callbacks
 	removeListener(eventType, callback) {
 		this.eventEmitter.removeListener(eventType, callback);
 		return this;
 	}
-};
+}

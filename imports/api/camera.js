@@ -1,6 +1,7 @@
-import { Mongo } from 'meteor/mongo';
-import { Discovery, Cam } from 'onvif';
 import {CAMERA_STATE} from '../constants';
+import {logError} from '../utils/logger';
+import {Mongo} from 'meteor/mongo';
+import {Discovery, Cam} from 'onvif';
 
 const Collection = new Mongo.Collection('camera');
 
@@ -9,12 +10,17 @@ export default Collection;
 export function discover() {
 	return new Promise((resolve, reject) => {
 		try {
+			// eslint-disable-next-line promise/prefer-await-to-callbacks
 			Discovery.probe((err, cams) => {
-				if (err) throw new Error(err);
+				if (err) {
+					logError('Failed to discover.')(err);
+					reject(err);
+				}
 				resolve(cams);
 			});
-		} catch (error) {
-			console.error(error);
+		}
+		catch (error) {
+			logError('Failed to discover.')(error);
 			reject(error);
 		}
 	});
@@ -43,20 +49,23 @@ export const toggle = (recorder) => (_id) => {
 export function getStream(hostname, port = '8899', username = 'admin', password = '') {
 	return new Promise((resolve, reject) => {
 		try {
-			new Cam({hostname, port, username, password}, function(err) {
-				if (err) {
-					reject(err);
+			// eslint-disable-next-line no-new
+			new Cam({hostname, port, username, password}, function (camError) {
+				if (camError) {
+					reject(camError);
 					return;
 				}
-				this.getStreamUri({protocol: 'RTSP'}, (err, stream) => {
-					if (err) {
-						reject(err);
+				// eslint-disable-next-line no-invalid-this
+				this.getStreamUri({protocol: 'RTSP'}, (getStreamError, stream) => {
+					if (getStreamError) {
+						reject(getStreamError);
 						return;
 					}
 					resolve(stream);
 				});
 			});
-		} catch (error) {
+		}
+		catch (error) {
 			reject(error);
 		}
 	});
