@@ -13,6 +13,7 @@ export default function Item({_id, title, state}) {
 	}, [_id]);
 
 	const handleRemove = React.useCallback(() => {
+		// eslint-disable-next-line no-alert
 		if (confirm('Do you really want to remove a camera?')) {
 			// eslint-disable-next-line promise/prefer-await-to-callbacks
 			Meteor.call(METHODS.CAMERA_REMOVE, _id, (err) => {
