@@ -1,9 +1,6 @@
 name: release
 
 on:
-  push:
-    tags:
-      - 'v*'
   release:
     types: [edited, published]
 
@@ -71,17 +68,6 @@ jobs:
         with:
           name: recorder-${{ steps.get_version.outputs.tag }}.tar.gz
           path: meteor-ip-cam-recorder.tar.gz
-
-      - name: Draft a release
-        if: github.event_name == 'push'
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: true
-          prerelease: false
 
       - name: Retrieve UPLOAD_URL
         id: get_release
