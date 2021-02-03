@@ -5,8 +5,8 @@ on:
     types: [prereleased, published]
 
 env:
-  NODE: 12.20.1
-  METEOR: 2.0
+  NODE: '12.20.1'
+  METEOR: '2.0'
 
 jobs:
   lint:
