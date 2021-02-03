@@ -1,0 +1,51 @@
+name: "Verify, build and create artifacts"
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    tags:
+      - 'v*'
+
+jobs:
+
+  lint:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.20.1
+      - run: npm ci
+      - run: npm run lint
+
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v1
+      - uses: meteorengineer/setup-meteor@v1
+        with:
+          meteor-release: 2.0
+      - run: meteor npm install
+      - run: npm run test
+
+  deploy:
+    runs-on: ubuntu-20.04
+    needs:
+      - lint
+      - test
+    steps:
+      - uses: actions/checkout@v1
+      - uses: meteorengineer/setup-meteor@v1
+        with:
+          meteor-release: 2.0
+      - name: Install dependencies
+        run: meteor npm install
+      - name: Build application
+        run: npm run build
+      - name: Upload application bundle
+        uses: actions/upload-artifact@v2
+        with:
+          name: meteor-ip-cam-recorder.tar.gz
+          path: meteor-ip-cam-recorder.tar.gz
