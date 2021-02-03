@@ -58,23 +58,39 @@ jobs:
       - name: Build application
         run: npm run build
 
-      - name: Retrieve UPLOAD_URL
-        id: get_release
-        if: startsWith(github.ref, 'refs/tags/')
+      - name: Get version number
+        id: get_version
         run: |
           TAG=$(echo ${{ github.ref }} | cut -d'/' -f 3)
-          upload_url=$(curl -sL https://api.github.com/repos/boonya/meteor-ip-cam-recorder/releases/tags/${TAG} | jq -r '.upload_url')
-          echo ::set-output name=UPLOAD_URL::$upload_url
           echo ::set-output name=TAG::${TAG}
-          echo "::debug::${UPLOAD_URL}"
-          echo "::debug::${TAG}"
+          echo "::debug::$TAG"
         shell: bash
 
       - name: Upload application bundle to the artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: recorder-${{ steps.get_release.outputs.tag }}.tar.gz
+          name: recorder-${{ steps.get_version.outputs.tag }}.tar.gz
           path: meteor-ip-cam-recorder.tar.gz
+
+      - name: Draft a release
+        if: github.event_name == 'push'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: true
+          prerelease: false
+
+      - name: Retrieve UPLOAD_URL
+        id: get_release
+        run: |
+          TAG=${{ steps.get_version.outputs.tag }}
+          UPLOAD_URL=$(curl -sL https://api.github.com/repos/boonya/meteor-ip-cam-recorder/releases/tags/${TAG} | jq -r '.upload_url')
+          echo ::set-output name=UPLOAD_URL::${UPLOAD_URL}
+          echo "::debug::$UPLOAD_URL"
+        shell: bash
 
       - name: Upload Release Assets
         uses: actions/upload-release-asset@v1
@@ -83,5 +99,5 @@ jobs:
         with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
           asset_path: meteor-ip-cam-recorder.tar.gz
-          asset_name: recorder-${{ steps.get_release.outputs.tag }}.tar.gz
+          asset_name: recorder-${{ steps.get_version.outputs.tag }}.tar.gz
           asset_content_type: application/gzip
