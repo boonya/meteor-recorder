@@ -2,7 +2,7 @@ name: release
 
 on:
   release:
-    types: [published]
+    types: [edited, published]
 
 env:
   NODE: '12.20.1'
