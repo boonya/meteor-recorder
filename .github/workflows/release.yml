@@ -1,6 +1,9 @@
 name: release
 
 on:
+  push:
+    tags:
+      - '*'
   release:
     types: [edited, published]
 
@@ -9,37 +12,37 @@ env:
   METEOR: '2.0'
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checking repo out
-        uses: actions/checkout@v1
-      - name: Setup Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ env.NODE }}
-      - name: Install dependencies
-        run: npm ci
-      - name: Linting
-        run: npm run lint
+  # lint:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checking repo out
+  #       uses: actions/checkout@v1
+  #     - name: Setup Node
+  #       uses: actions/setup-node@v1
+  #       with:
+  #         node-version: ${{ env.NODE }}
+  #     - name: Install dependencies
+  #       run: npm ci
+  #     - name: Linting
+  #       run: npm run lint
 
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checking repo out
-        uses: actions/checkout@v1
-      - name: Setup Meteor
-        uses: meteorengineer/setup-meteor@v1
-        with:
-          meteor-release: ${{ env.METEOR }}
-      - name: Install dependencies
-        run: meteor npm install
-      - name: Run tests
-        run: npm run test
+  # test:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checking repo out
+  #       uses: actions/checkout@v1
+  #     - name: Setup Meteor
+  #       uses: meteorengineer/setup-meteor@v1
+  #       with:
+  #         meteor-release: ${{ env.METEOR }}
+  #     - name: Install dependencies
+  #       run: meteor npm install
+  #     - name: Run tests
+  #       run: npm run test
 
   deploy:
     runs-on: ubuntu-latest
-    needs: [lint, test]
+    # needs: [lint, test]
     steps:
       - name: Checking repo out
         uses: actions/checkout@v1
@@ -68,15 +71,14 @@ jobs:
           TAG=$(echo ${{ github.ref }} | cut -d'/' -f 3)
           upload_url=$(curl -sL https://api.github.com/repos/boonya/meteor-ip-cam-recorder/releases/tags/${TAG} | jq -r '.upload_url')
           echo ::set-output name=UPLOAD_URL::$upload_url
-          echo "::debug::UPLOAD_URL"
-          echo "::debug::TAG"
+          echo "::debug::${UPLOAD_URL}"
+          echo "::debug::${TAG}"
         shell: bash
 
       - name: Upload Release Assets
         uses: actions/upload-release-asset@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
           asset_path: meteor-ip-cam-recorder.tar.gz
