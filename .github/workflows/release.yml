@@ -76,7 +76,7 @@ jobs:
         if: github.event_name == 'push'
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
@@ -86,10 +86,9 @@ jobs:
       - name: Retrieve UPLOAD_URL
         id: get_release
         run: |
-          TAG=${{ steps.get_version.outputs.tag }}
-          UPLOAD_URL=$(curl -sL https://api.github.com/repos/boonya/meteor-ip-cam-recorder/releases/tags/${TAG} | jq -r '.upload_url')
-          echo ::set-output name=UPLOAD_URL::${UPLOAD_URL}
-          echo "::debug::$UPLOAD_URL"
+          upload_url=$(curl -sL https://api.github.com/repos/boonya/meteor-ip-cam-recorder/releases/tags/${{ steps.get_version.outputs.tag }} | jq -r '.upload_url')
+          echo ::set-output name=UPLOAD_URL::$upload_url
+          echo "::debug::$upload_url"
         shell: bash
 
       - name: Upload Release Assets
