@@ -55,11 +55,12 @@ jobs:
       - name: Build application
         run: npm run build
 
-      - name: Get version number
-        id: get_version
+      - name: Collect data
+        id: data
         run: |
           TAG=$(echo ${{ github.ref }} | cut -d'/' -f 3)
           echo ::set-output name=TAG::${TAG}
+          echo ::set-output name=REPO::${{ github.repository }}
           echo ::set-output name=SRC::${{ github.event.repository.name }}.tar.gz
           echo ::set-output name=DST::recorder-${TAG}.tar.gz
         shell: bash
@@ -67,13 +68,13 @@ jobs:
       - name: Upload application bundle to the artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ steps.get_version.outputs.dst }}
-          path: ${{ steps.get_version.outputs.src }}
+          name: ${{ steps.data.outputs.dst }}
+          path: ${{ steps.data.outputs.src }}
 
       - name: Retrieve UPLOAD_URL
-        id: get_release
+        id: release
         run: |
-          upload_url=$(curl -sL https://api.github.com/repos/${{ steps.get_version.outputs.repo }}/releases/tags/${{ steps.get_version.outputs.tag }} | jq -r '.upload_url')
+          upload_url=$(curl -sL https://api.github.com/repos/${{ steps.data.outputs.repo }}/releases/tags/${{ steps.data.outputs.tag }} | jq -r '.upload_url')
           echo ::set-output name=UPLOAD_URL::$upload_url
         shell: bash
 
@@ -82,7 +83,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ${{ steps.get_version.outputs.src }}
-          asset_name: ${{ steps.get_version.outputs.dst }}
+          upload_url: ${{ steps.release.outputs.upload_url }}
+          asset_path: ${{ steps.data.outputs.src }}
+          asset_name: ${{ steps.data.outputs.dst }}
           asset_content_type: application/gzip
