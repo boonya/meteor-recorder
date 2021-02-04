@@ -61,15 +61,13 @@ jobs:
           echo ::debug::${{ github.repository }}
           echo ::debug::${{ github.repository_owner }}
           echo ::debug::${{ github.event.repository.name }}
-          echo ::debug::SRC = ${{ steps.get_version.outputs.name }}.tar.gz
-          echo ::debug::DST = recorder-${{ steps.get_version.outputs.tag }}.tar.gz
+          echo ::debug::SRC = ${{ github.event.repository.name }}.tar.gz
+          echo ::debug::DST = recorder-${TAG}.tar.gz
 
           TAG=$(echo ${{ github.ref }} | cut -d'/' -f 3)
           echo ::set-output name=TAG::${TAG}
-          echo ::set-output name=REPO::${{ github.repository }}
-          echo ::set-output name=NAME::${{ github.event.repository.name }}
-          echo ::set-output name=SRC::${{ steps.get_version.outputs.name }}.tar.gz
-          echo ::set-output name=DST::recorder-${{ steps.get_version.outputs.tag }}.tar.gz
+          echo ::set-output name=SRC::${{ github.event.repository.name }}.tar.gz
+          echo ::set-output name=DST::recorder-${TAG}.tar.gz
         shell: bash
 
       - name: Upload application bundle to the artifacts
