@@ -62,7 +62,7 @@ jobs:
           echo ::set-output name=TAG::${TAG}
           echo ::set-output name=REPO::${{ github.repository }}
           echo ::set-output name=SRC::${{ github.event.repository.name }}.tar.gz
-          echo ::set-output name=DST::recorder-${TAG}.tar.gz
+          echo ::set-output name=DST::recorder.tar.gz
         shell: bash
 
       - name: Upload application bundle to the artifacts
