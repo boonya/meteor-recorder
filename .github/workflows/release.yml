@@ -2,44 +2,44 @@ name: release
 
 on:
   release:
-    types: [edited, published]
+    types: [published]
 
 env:
   NODE: '12.20.1'
   METEOR: '2.0'
 
 jobs:
-  # lint:
-  #   runs-on: ubuntu-20.04
-  #   steps:
-  #     - name: Checking repo out
-  #       uses: actions/checkout@v1
-  #     - name: Setup Node
-  #       uses: actions/setup-node@v1
-  #       with:
-  #         node-version: ${{ env.NODE }}
-  #     - name: Install dependencies
-  #       run: npm ci
-  #     - name: Linting
-  #       run: npm run lint
+  lint:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checking repo out
+        uses: actions/checkout@v1
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE }}
+      - name: Install dependencies
+        run: npm ci
+      - name: Linting
+        run: npm run lint
 
-  # test:
-  #   runs-on: ubuntu-20.04
-  #   steps:
-  #     - name: Checking repo out
-  #       uses: actions/checkout@v1
-  #     - name: Setup Meteor
-  #       uses: meteorengineer/setup-meteor@v1
-  #       with:
-  #         meteor-release: ${{ env.METEOR }}
-  #     - name: Install dependencies
-  #       run: meteor npm install
-  #     - name: Run tests
-  #       run: npm run test
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checking repo out
+        uses: actions/checkout@v1
+      - name: Setup Meteor
+        uses: meteorengineer/setup-meteor@v1
+        with:
+          meteor-release: ${{ env.METEOR }}
+      - name: Install dependencies
+        run: meteor npm install
+      - name: Run tests
+        run: npm run test
 
   deploy:
     runs-on: ubuntu-20.04
-    # needs: [lint, test]
+    needs: [lint, test]
     steps:
       - name: Checking repo out
         uses: actions/checkout@v1
@@ -58,12 +58,6 @@ jobs:
       - name: Get version number
         id: get_version
         run: |
-          echo ::debug::${{ github.repository }}
-          echo ::debug::${{ github.repository_owner }}
-          echo ::debug::${{ github.event.repository.name }}
-          echo ::debug::SRC = ${{ github.event.repository.name }}.tar.gz
-          echo ::debug::DST = recorder-${TAG}.tar.gz
-
           TAG=$(echo ${{ github.ref }} | cut -d'/' -f 3)
           echo ::set-output name=TAG::${TAG}
           echo ::set-output name=SRC::${{ github.event.repository.name }}.tar.gz
