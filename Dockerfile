@@ -1,8 +1,8 @@
 FROM node:12-alpine as builder
 WORKDIR /usr/src/app
 RUN apk add --no-cache --virtual .gyp python make g++
-COPY ./video-recorder.tar.gz ./
-RUN tar -xzvf video-recorder.tar.gz \
+COPY ./meteor-ip-cam-recorder.tar.gz ./recorder.tgz
+RUN tar -xzvf recorder.tgz \
 	&& (cd bundle/programs/server && npm install) \
 	&& apk del .gyp
 
