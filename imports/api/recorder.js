@@ -6,7 +6,7 @@ import {EventEmitter} from 'events';
 import RtspRecorder, {RecorderEvents} from 'rtsp-video-recorder';
 
 const log = (event) => (...args) => {
-	logInfo(`Event "${event}" \nat ${new Date().toString()}:`)(...args);
+	logInfo('Recorder Event', event, 'at', new Date().toString())(...args);
 };
 
 export const Events = {

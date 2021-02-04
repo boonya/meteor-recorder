@@ -15,4 +15,4 @@ export const RECORDER = {
 
 export const ENV = {
 	LOGGING: LOGGING === 'true',
-}
+};

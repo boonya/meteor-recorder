@@ -34,7 +34,7 @@ Item.propTypes = {
 	hostname: PropTypes.string.isRequired,
 	path: PropTypes.string.isRequired,
 	port: PropTypes.string.isRequired,
-	uri: PropTypes.object.isRequired,
+	uri: PropTypes.objectOf(PropTypes.objectOf(PropTypes.string)).isRequired,
 };
 
 Item.defaultProps = {
