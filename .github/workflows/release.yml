@@ -58,24 +58,31 @@ jobs:
       - name: Get version number
         id: get_version
         run: |
+          echo ::debug::${{ github.repository }}
+          echo ::debug::${{ github.repository_owner }}
+          echo ::debug::${{ github.event.repository.name }}
+          echo ::debug::SRC = ${{ steps.get_version.outputs.name }}.tar.gz
+          echo ::debug::DST = recorder-${{ steps.get_version.outputs.tag }}.tar.gz
+
           TAG=$(echo ${{ github.ref }} | cut -d'/' -f 3)
           echo ::set-output name=TAG::${TAG}
-          echo ::debug::$TAG
-          echo ::debug::${{ github.event.repository.name }}
+          echo ::set-output name=REPO::${{ github.repository }}
+          echo ::set-output name=NAME::${{ github.event.repository.name }}
+          echo ::set-output name=SRC::${{ steps.get_version.outputs.name }}.tar.gz
+          echo ::set-output name=DST::recorder-${{ steps.get_version.outputs.tag }}.tar.gz
         shell: bash
 
       - name: Upload application bundle to the artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: recorder-${{ steps.get_version.outputs.tag }}.tar.gz
-          path: meteor-ip-cam-recorder.tar.gz
+          name: ${{ steps.get_version.outputs.dst }}
+          path: ${{ steps.get_version.outputs.src }}
 
       - name: Retrieve UPLOAD_URL
         id: get_release
         run: |
-          upload_url=$(curl -sL https://api.github.com/repos/boonya/meteor-ip-cam-recorder/releases/tags/${{ steps.get_version.outputs.tag }} | jq -r '.upload_url')
+          upload_url=$(curl -sL https://api.github.com/repos/${{ steps.get_version.outputs.repo }}/releases/tags/${{ steps.get_version.outputs.tag }} | jq -r '.upload_url')
           echo ::set-output name=UPLOAD_URL::$upload_url
-          echo ::debug::$upload_url
         shell: bash
 
       - name: Upload Release Assets
@@ -84,6 +91,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: meteor-ip-cam-recorder.tar.gz
-          asset_name: recorder-${{ steps.get_version.outputs.tag }}.tar.gz
+          asset_path: ${{ steps.get_version.outputs.src }}
+          asset_name: ${{ steps.get_version.outputs.dst }}
           asset_content_type: application/gzip
