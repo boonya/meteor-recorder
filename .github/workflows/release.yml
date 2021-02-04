@@ -7,11 +7,10 @@ on:
 env:
   NODE: '12.20.1'
   METEOR: '2.0'
-  RUNS_ON: ubuntu-20.04
 
 jobs:
   # lint:
-  #   runs-on: ${{ env.RUNS_ON }}
+  #   runs-on: ubuntu-20.04
   #   steps:
   #     - name: Checking repo out
   #       uses: actions/checkout@v1
@@ -25,7 +24,7 @@ jobs:
   #       run: npm run lint
 
   # test:
-  #   runs-on: ${{ env.RUNS_ON }}
+  #   runs-on: ubuntu-20.04
   #   steps:
   #     - name: Checking repo out
   #       uses: actions/checkout@v1
@@ -39,7 +38,7 @@ jobs:
   #       run: npm run test
 
   deploy:
-    runs-on: ${{ env.RUNS_ON }}
+    runs-on: ubuntu-20.04
     # needs: [lint, test]
     steps:
       - name: Checking repo out
