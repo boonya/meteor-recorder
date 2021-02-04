@@ -7,10 +7,11 @@ on:
 env:
   NODE: '12.20.1'
   METEOR: '2.0'
+  RUNS_ON: ubuntu-20.04
 
 jobs:
   # lint:
-  #   runs-on: ubuntu-latest
+  #   runs-on: ${{ env.RUNS_ON }}
   #   steps:
   #     - name: Checking repo out
   #       uses: actions/checkout@v1
@@ -24,7 +25,7 @@ jobs:
   #       run: npm run lint
 
   # test:
-  #   runs-on: ubuntu-latest
+  #   runs-on: ${{ env.RUNS_ON }}
   #   steps:
   #     - name: Checking repo out
   #       uses: actions/checkout@v1
@@ -38,7 +39,7 @@ jobs:
   #       run: npm run test
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ${{ env.RUNS_ON }}
     # needs: [lint, test]
     steps:
       - name: Checking repo out
@@ -60,7 +61,8 @@ jobs:
         run: |
           TAG=$(echo ${{ github.ref }} | cut -d'/' -f 3)
           echo ::set-output name=TAG::${TAG}
-          echo "::debug::$TAG"
+          echo ::debug::$TAG
+          echo ::debug::${{ github.event.repository.name }}
         shell: bash
 
       - name: Upload application bundle to the artifacts
@@ -74,7 +76,7 @@ jobs:
         run: |
           upload_url=$(curl -sL https://api.github.com/repos/boonya/meteor-ip-cam-recorder/releases/tags/${{ steps.get_version.outputs.tag }} | jq -r '.upload_url')
           echo ::set-output name=UPLOAD_URL::$upload_url
-          echo "::debug::$upload_url"
+          echo ::debug::$upload_url
         shell: bash
 
       - name: Upload Release Assets

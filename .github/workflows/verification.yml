@@ -13,10 +13,11 @@ on:
 env:
   NODE: '12.20.1'
   METEOR: '2.0'
+  RUNS_ON: ubuntu-20.04
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ${{ env.RUNS_ON }}
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
@@ -25,7 +26,7 @@ jobs:
       - run: npm ci
       - run: npm run lint
   test-meteor:
-    runs-on: ubuntu-latest
+    runs-on: ${{ env.RUNS_ON }}
     steps:
       - uses: actions/checkout@v1
       - uses: meteorengineer/setup-meteor@v1
