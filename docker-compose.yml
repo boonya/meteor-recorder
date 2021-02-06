@@ -2,8 +2,8 @@ version: '3'
 services:
   recorder:
     container_name: recorder
-    image: boonya/video-recorder
-    build: .
+    image: boonya/meteor-ip-cam-recorder:latest
+    # build: .
     depends_on:
       - mongo
     network_mode: host

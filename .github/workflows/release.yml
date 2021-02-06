@@ -67,7 +67,7 @@ jobs:
           name: ${{ env.METEOR_BUNDLE }}
           path: ${{ env.METEOR_BUNDLE }}
 
-  # release-bundle:
+  # meteor-bundle:
   #   runs-on: ubuntu-20.04
   #   needs: [build]
   #   steps:
@@ -95,7 +95,7 @@ jobs:
   #         asset_name: ${{ env.METEOR_BUNDLE }}
   #         asset_content_type: application/gzip
 
-  docker:
+  docker-image:
     runs-on: ubuntu-20.04
     needs: [build]
     steps:
@@ -107,22 +107,11 @@ jobs:
         with:
           name: ${{ env.METEOR_BUNDLE }}
 
-      - name: Get the lateest tag
+      - name: Get the latest tag
         id: get_tag
         run: |
           TAG=$(echo ${{ github.ref }} | cut -d'/' -f 3)
           echo ::set-output name=tag::$TAG
-        shell: bash
-
-      - name: Debug
-        id: debug
-        run: |
-          ls -alh ./
-          ls -alh ../
-          ls -alh ../../
-          echo "PWD: $(pwd)"
-          echo TAG: "${{ github.ref }} | cut -d'/' -f 3"
-          echo "GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}"
         shell: bash
 
       - name: Set up QEMU
@@ -141,8 +130,8 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          context: .
-          file: ./Dockerfile
+          # context: .
+          # file: ./Dockerfile
           platforms: linux/amd64, linux/arm64
           build-args: |
             BUNDLE=${{ env.METEOR_BUNDLE }}
@@ -151,5 +140,3 @@ jobs:
             ${{ github.repository }}:latest
             ${{ github.repository }}:${{ steps.get_tag.outputs.tag }}
 
-      - name: Docker Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
