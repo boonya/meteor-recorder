@@ -8,6 +8,7 @@ env:
   NODE: '12.20.1'
   METEOR: '2.0'
   METEOR_BUNDLE: 'meteor-bundle.tar.gz'
+  RELEASE_ARTIFACTS: 'meteor-ip-cam-recorder.tar.gz'
 
 jobs:
   lint:
@@ -104,6 +105,11 @@ jobs:
       #     asset_path: ./${{ env.METEOR_BUNDLE }}
       #     asset_name: ${{ env.METEOR_BUNDLE }}
       #     asset_content_type: application/gzip
+
+      - name: Prepare Release Assets
+        run: |
+          tar -czvf ${{ env.RELEASE_ARTIFACTS }} * .*
+        shell: bash
 
       - name: Upload Release Assets
         uses: actions/upload-release-asset@v1

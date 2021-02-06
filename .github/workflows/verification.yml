@@ -2,7 +2,7 @@ name: Verification
 
 on:
   push:
-    tags-ignore: ['v*']
+    # tags-ignore: ['v*']
     paths-ignore: ['**.md', 'LICENCE']
   pull_request:
     types: [opened]
