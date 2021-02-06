@@ -2,11 +2,11 @@ name: Verification by linting & testing
 
 on:
   push:
-    paths-ignore: ['**.md', 'LICENCE']
-    tags-ignore: ['*']
+    - tags-ignore: ['*']
+    - paths-ignore: ['**.md', 'LICENCE']
   pull_request:
-    types: [opened]
-    paths-ignore: ['**.md', 'LICENCE']
+    - types: [opened]
+    - paths-ignore: ['**.md', 'LICENCE']
 
 env:
   NODE: '12.20.1'
