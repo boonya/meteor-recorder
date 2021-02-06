@@ -3,7 +3,7 @@ name: Verification by linting & testing
 on:
   push:
     paths-ignore: ['**.md', 'LICENCE']
-    tags-ignore: [*]
+    tags-ignore: ['*']
   pull_request:
     types: [opened]
     paths-ignore: ['**.md', 'LICENCE']
