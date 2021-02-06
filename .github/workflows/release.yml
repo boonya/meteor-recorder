@@ -111,9 +111,9 @@ jobs:
             - linux/arm64
             - darwin
           push: true
-          tags:
-            - ${{ steps.data.outputs.repo }}:latest
-            - ${{ steps.data.outputs.repo }}:${{ steps.data.outputs.tag }}
+          tags: |
+            ${{ steps.data.outputs.repo }}:latest
+            ${{ steps.data.outputs.repo }}:${{ steps.data.outputs.tag }}
 
       - name: Docker Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
