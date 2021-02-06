@@ -137,7 +137,7 @@ jobs:
         with:
           platforms: linux/amd64, linux/arm64
           build-args: |
-            BUNDLE=./${{ env.METEOR_BUNDLE }}
+            BUNDLE=/home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/${{ env.METEOR_BUNDLE }}
           push: true
           tags: |
             ${{ github.repository }}:latest
