@@ -117,7 +117,7 @@ jobs:
           ls -alh ./
           pwd
           echo ${{ github.ref }} | cut -d'/' -f 3
-          echo ${{ GITHUB_WORKSPACE }}
+          echo ${GITHUB_WORKSPACE}
         shell: bash
 
       - name: Set up QEMU
