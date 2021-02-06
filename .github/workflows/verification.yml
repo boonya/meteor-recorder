@@ -2,14 +2,10 @@ name: verification
 
 on:
   push:
-    branch-ignore:
-      - build-docker-image
     paths-ignore:
       - '**.md'
       - 'LICENCE'
   pull_request:
-    branch-ignore:
-      - build-docker-image
     paths-ignore:
       - '**.md'
       - 'LICENCE'

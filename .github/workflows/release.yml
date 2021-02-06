@@ -1,9 +1,6 @@
 name: release
 
 on:
-  push:
-    branch:
-      - build-docker-image
   release:
     types: [published]
 
@@ -122,9 +119,11 @@ jobs:
         with:
           name: ${{ env.METEOR_BUNDLE }}
 
-      - name: Debug
+      - name: Retrieve UPLOAD_URL
+        id: get_tag
         run: |
-          ls -alh ./
+          TAG=$(echo ${{ github.ref }} | cut -d'/' -f 3)
+          echo ::set-output name=tag::$TAG
         shell: bash
 
       - name: Set up QEMU
@@ -145,7 +144,7 @@ jobs:
             BUNDLE=./${{ env.METEOR_BUNDLE }}
           push: true
           tags: |
-            ${{ steps.data.outputs.repo }}:latest
-            ${{ steps.data.outputs.repo }}:${{ steps.data.outputs.tag }}
+            ${{ github.repository }}:latest
+            ${{ github.repository }}:${{ steps.get_tag.outputs.tag }}
       - name: Docker Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
