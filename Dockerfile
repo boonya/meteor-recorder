@@ -1,7 +1,7 @@
 FROM node:12-alpine as builder
 WORKDIR /usr/src/app
 RUN apk add --no-cache --virtual .gyp python make g++
-COPY ./meteor-ip-cam-recorder.tar.gz ./recorder.tgz
+COPY meteor-bundle.tar.gz ./
 RUN tar -xzvf recorder.tgz \
 	&& (cd bundle/programs/server && npm install) \
 	&& apk del .gyp

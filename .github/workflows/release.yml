@@ -44,6 +44,7 @@ jobs:
       - name: Checking repo out
         uses: actions/checkout@v1
 
+# Meteor
       - name: Setup Meteor
         uses: meteorengineer/setup-meteor@v1
         with:
@@ -61,15 +62,15 @@ jobs:
           TAG=$(echo ${{ github.ref }} | cut -d'/' -f 3)
           echo ::set-output name=TAG::${TAG}
           echo ::set-output name=REPO::${{ github.repository }}
-          echo ::set-output name=SRC::${{ github.event.repository.name }}.tar.gz
-          echo ::set-output name=DST::recorder.tar.gz
+          echo ::set-output name=METEOR_BUNDLE_SRC::${{ github.event.repository.name }}.tar.gz
+          echo ::set-output name=METEOR_BUNDLE_DST::meteor-bundle.tar.gz
         shell: bash
 
-      - name: Upload application bundle to the artifacts
+      - name: Upload Meteor Bundle to the Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ steps.data.outputs.dst }}
-          path: ${{ steps.data.outputs.src }}
+          name: ${{ steps.data.outputs.meteor_bundle_dst }}
+          path: ${{ steps.data.outputs.meteor_bundle_src }}
 
       - name: Retrieve UPLOAD_URL
         id: release
@@ -78,12 +79,41 @@ jobs:
           echo ::set-output name=UPLOAD_URL::$upload_url
         shell: bash
 
-      - name: Upload Release Assets
+      - name: Upload Meteor Bundle to Release Assets
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.release.outputs.upload_url }}
-          asset_path: ${{ steps.data.outputs.src }}
-          asset_name: ${{ steps.data.outputs.dst }}
+          asset_path: ${{ steps.data.outputs.meteor_bundle_src }}
+          asset_name: ${{ steps.data.outputs.meteor_bundle_dst }}
           asset_content_type: application/gzip
+
+# Docker
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker Image
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          platforms:
+            - linux/amd64
+            - linux/arm64
+            - darwin
+          push: true
+          tags:
+            - ${{ steps.data.outputs.repo }}:latest
+            - ${{ steps.data.outputs.repo }}:${{ steps.data.outputs.tag }}
+
+      - name: Docker Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
