@@ -13,33 +13,33 @@ env:
   METEOR_BUNDLE: 'meteor-bundle.tar.gz'
 
 jobs:
-  lint:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checking repo out
-        uses: actions/checkout@v1
-      - name: Setup Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ env.NODE }}
-      - name: Install dependencies
-        run: npm ci
-      - name: Linting
-        run: npm run lint
+  # lint:
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - name: Checking repo out
+  #       uses: actions/checkout@v1
+  #     - name: Setup Node
+  #       uses: actions/setup-node@v1
+  #       with:
+  #         node-version: ${{ env.NODE }}
+  #     - name: Install dependencies
+  #       run: npm ci
+  #     - name: Linting
+  #       run: npm run lint
 
-  test:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checking repo out
-        uses: actions/checkout@v1
-      - name: Setup Meteor
-        uses: meteorengineer/setup-meteor@v1
-        with:
-          meteor-release: ${{ env.METEOR }}
-      - name: Install dependencies
-        run: meteor npm install
-      - name: Run tests
-        run: npm run test
+  # test:
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - name: Checking repo out
+  #       uses: actions/checkout@v1
+  #     - name: Setup Meteor
+  #       uses: meteorengineer/setup-meteor@v1
+  #       with:
+  #         meteor-release: ${{ env.METEOR }}
+  #     - name: Install dependencies
+  #       run: meteor npm install
+  #     - name: Run tests
+  #       run: npm run test
 
   build:
     runs-on: ubuntu-20.04
@@ -74,7 +74,12 @@ jobs:
           name: ${{ env.METEOR_BUNDLE }}
           path: ${{ github.event.repository.name }}.tar.gz
 
-  release:
+      - name: Debug
+        run: |
+          ls -alh ./
+        shell: bash
+
+  release-bundle:
     runs-on: ubuntu-20.04
     needs: [build]
     steps:
@@ -82,6 +87,13 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: ${{ env.METEOR_BUNDLE }}
+
+      - name: Debug
+        run: |
+          ls -alh ./
+        shell: bash
+
+
       - name: Retrieve UPLOAD_URL
         id: get_upload_url
         run: |
@@ -96,7 +108,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_upload_url.outputs.upload_url }}
-          asset_path: ${{ env.METEOR_BUNDLE }}
+          asset_path: ./${{ env.METEOR_BUNDLE }}
           asset_name: ${{ env.METEOR_BUNDLE }}
           asset_content_type: application/gzip
 
@@ -108,6 +120,12 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: ${{ env.METEOR_BUNDLE }}
+
+      - name: Debug
+        run: |
+          ls -alh ./
+        shell: bash
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -123,7 +141,7 @@ jobs:
         with:
           platforms: linux/amd64, linux/arm64
           build-args: |
-            BUNDLE=${{ env.METEOR_BUNDLE }}
+            BUNDLE=./${{ env.METEOR_BUNDLE }}
           push: true
           tags: |
             ${{ steps.data.outputs.repo }}:latest
