@@ -2,15 +2,15 @@ FROM node:12-alpine as builder
 
 ARG BUNDLE=meteor-ip-cam-recorder.tar.gz
 
-RUN LIST=$(ls -alh .) \
+RUN LIST1="$(ls -alh .)" \
 	&& echo "The BUNDLE is $BUNDLE" \
-	&& echo "Listing: $LIST"
+	&& echo "Listing 1: $LIST1"
 
 COPY $BUNDLE /usr/src/app/bundle.tgz
 
 WORKDIR /usr/src/app
 
-RUN LIST2=$(ls -alh .) \
+RUN LIST2="$(ls -alh .)" \
 	&& echo "The BUNDLE is $BUNDLE" \
 	&& echo "Listing 2: $LIST2"
 
