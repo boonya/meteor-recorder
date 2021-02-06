@@ -8,10 +8,11 @@ env:
   NODE: '12.20.1'
   METEOR: '2.0'
   METEOR_BUNDLE: 'meteor-bundle.tar.gz'
-  RELEASE_ARTIFACTS: 'meteor-ip-cam-recorder.tar.gz'
+  RELEASE_ARTIFACTS: 'meteor-ip-cam-recorder.zip'
 
 jobs:
   lint:
+    name: Linting
     runs-on: ubuntu-20.04
     steps:
       - name: Checking repo out
@@ -26,6 +27,7 @@ jobs:
         run: npm run lint
 
   test:
+    name: Testing
     runs-on: ubuntu-20.04
     steps:
       - name: Checking repo out
@@ -40,6 +42,7 @@ jobs:
         run: npm run test
 
   build-meteor-bundle:
+    name: Prepare Meteor Bundle and other artifacts
     runs-on: ubuntu-20.04
     needs: [lint, test]
     steps:
@@ -79,6 +82,7 @@ jobs:
           if-no-files-found: error
 
   release:
+    name: Release atrifacts
     runs-on: ubuntu-20.04
     needs: [build-meteor-bundle]
     steps:
@@ -108,7 +112,8 @@ jobs:
 
       - name: Prepare Release Assets
         run: |
-          tar -czvf ${{ env.RELEASE_ARTIFACTS }} * .*
+          # tar -czvf ${{ env.RELEASE_ARTIFACTS }} * .*
+          zip --junk-paths ${{ env.RELEASE_ARTIFACTS }} * .*
         shell: bash
 
       - name: Upload Release Assets
@@ -119,9 +124,10 @@ jobs:
           upload_url: ${{ steps.get_upload_url.outputs.upload_url }}
           asset_path: ${{ env.RELEASE_ARTIFACTS }}
           asset_name: ${{ env.RELEASE_ARTIFACTS }}
-          asset_content_type: application/gzip
+          asset_content_type: application/zip
 
   docker-image:
+    name: Build and publish Docker Image
     runs-on: ubuntu-20.04
     needs: [build-meteor-bundle]
     steps:
