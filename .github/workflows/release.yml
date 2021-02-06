@@ -1,12 +1,16 @@
 name: release
 
 on:
+  push:
+    branch:
+      - build-docker-image
   release:
     types: [published]
 
 env:
   NODE: '12.20.1'
   METEOR: '2.0'
+  METEOR_BUNDLE: 'meteor-bundle.tar.gz'
 
 jobs:
   lint:
@@ -37,14 +41,13 @@ jobs:
       - name: Run tests
         run: npm run test
 
-  deploy:
+  build:
     runs-on: ubuntu-20.04
     needs: [lint, test]
     steps:
       - name: Checking repo out
         uses: actions/checkout@v1
 
-# Meteor
       - name: Setup Meteor
         uses: meteorengineer/setup-meteor@v1
         with:
@@ -56,63 +59,72 @@ jobs:
       - name: Build application
         run: npm run build
 
-      - name: Collect data
-        id: data
-        run: |
-          TAG=$(echo ${{ github.ref }} | cut -d'/' -f 3)
-          echo ::set-output name=TAG::${TAG}
-          echo ::set-output name=REPO::${{ github.repository }}
-          echo ::set-output name=METEOR_BUNDLE_SRC::${{ github.event.repository.name }}.tar.gz
-          echo ::set-output name=METEOR_BUNDLE_DST::meteor-bundle.tar.gz
-        shell: bash
+      # - name: Collect data
+      #   id: data
+      #   run: |
+      #     TAG=$(echo ${{ github.ref }} | cut -d'/' -f 3)
+      #     echo ::set-output name=TAG::${TAG}
+      #     echo ::set-output name=REPO::${{ github.repository }}
+      #     echo ::set-output name=METEOR_BUNDLE_SRC::${{ github.event.repository.name }}.tar.gz
+      #   shell: bash
 
       - name: Upload Meteor Bundle to the Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ steps.data.outputs.meteor_bundle_dst }}
-          path: ${{ steps.data.outputs.meteor_bundle_src }}
+          name: ${{ env.METEOR_BUNDLE }}
+          path: ${{ github.event.repository.name }}.tar.gz
 
+  release:
+    runs-on: ubuntu-20.04
+    needs: [build]
+      - name: Download bundle Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.METEOR_BUNDLE }}
       - name: Retrieve UPLOAD_URL
-        id: release
+        id: get_upload_url
         run: |
-          upload_url=$(curl -sL https://api.github.com/repos/${{ steps.data.outputs.repo }}/releases/tags/${{ steps.data.outputs.tag }} | jq -r '.upload_url')
+          TAG=$(echo ${{ github.ref }} | cut -d'/' -f 3)
+          REPO=${{ github.repository }}
+          upload_url=$(curl -sL https://api.github.com/repos/${REPO}/releases/tags/${TAG} | jq -r '.upload_url')
           echo ::set-output name=UPLOAD_URL::$upload_url
         shell: bash
-
       - name: Upload Meteor Bundle to Release Assets
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.release.outputs.upload_url }}
-          asset_path: ${{ steps.data.outputs.meteor_bundle_src }}
-          asset_name: ${{ steps.data.outputs.meteor_bundle_dst }}
+          upload_url: ${{ steps.get_upload_url.outputs.upload_url }}
+          asset_path: ${{ env.METEOR_BUNDLE }}
+          asset_name: ${{ env.METEOR_BUNDLE }}
           asset_content_type: application/gzip
 
-# Docker
+  docker:
+    runs-on: ubuntu-20.04
+    needs: [build]
+      - name: Download bundle Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.METEOR_BUNDLE }}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
       - name: Build and push Docker Image
         id: docker_build
         uses: docker/build-push-action@v2
         with:
           platforms: linux/amd64, linux/arm64
           build-args: |
-            BUNDLE=${{ steps.data.outputs.meteor_bundle_src }}
+            BUNDLE=${{ env.METEOR_BUNDLE }}
           push: true
           tags: |
             ${{ steps.data.outputs.repo }}:latest
             ${{ steps.data.outputs.repo }}:${{ steps.data.outputs.tag }}
-
       - name: Docker Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
