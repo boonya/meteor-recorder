@@ -8,7 +8,7 @@ RUN LIST1="$(ls -alh .)" \
 	&& echo "Listing 1: $LIST1" \
 	&& echo "PWD 1: $PWD"
 
-COPY $BUNDLE /usr/src/app/bundle.tgz
+COPY ../$BUNDLE /usr/src/app/bundle.tgz
 
 WORKDIR /usr/src/app
 
