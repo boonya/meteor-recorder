@@ -38,7 +38,7 @@ jobs:
       - name: Run tests
         run: npm run test
 
-  build:
+  build-meteor-bundle:
     runs-on: ubuntu-20.04
     needs: [lint, test]
     steps:
@@ -77,9 +77,9 @@ jobs:
             LICENCE
           if-no-files-found: error
 
-  meteor-bundle:
+  release:
     runs-on: ubuntu-20.04
-    needs: [build]
+    needs: [build-meteor-bundle]
     steps:
       - name: Download Artifact
         uses: actions/download-artifact@v2
@@ -95,23 +95,30 @@ jobs:
           echo ::set-output name=UPLOAD_URL::$upload_url
         shell: bash
 
-      - name: Upload Meteor Bundle to Release Assets
+      # - name: Upload Meteor Bundle to Release Assets
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ steps.get_upload_url.outputs.upload_url }}
+      #     asset_path: ./${{ env.METEOR_BUNDLE }}
+      #     asset_name: ${{ env.METEOR_BUNDLE }}
+      #     asset_content_type: application/gzip
+
+      - name: Upload Release Assets
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_upload_url.outputs.upload_url }}
-          asset_path: ./${{ env.METEOR_BUNDLE }}
-          asset_name: ${{ env.METEOR_BUNDLE }}
-          asset_content_type: application/gzip
+          asset_path: artifacts.zip
+          asset_name: artifacts
+          asset_content_type: application/zip
 
   docker-image:
     runs-on: ubuntu-20.04
-    needs: [build]
+    needs: [build-meteor-bundle]
     steps:
-      # - name: Checking repo out
-      #   uses: actions/checkout@v1
-
       - name: Download bundle Artifact
         uses: actions/download-artifact@v2
         with:
