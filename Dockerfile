@@ -3,11 +3,11 @@ FROM node:12-alpine as builder
 ARG BUNDLE=meteor-ip-cam-recorder.tar.gz
 
 RUN echo "The BUNDLE is $BUNDLE"
-RUN echo ls -alh ./
+RUN echo $(ls -alh ./)
 
 WORKDIR /usr/src/app
 
-RUN echo ls -alh ./
+RUN echo $(ls -alh ./)
 
 RUN apk add --no-cache --virtual .gyp python make g++
 

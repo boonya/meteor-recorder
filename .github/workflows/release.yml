@@ -7,7 +7,6 @@ on:
 env:
   NODE: '12.20.1'
   METEOR: '2.0'
-  METEOR_BUNDLE_ARTIFACT: 'meteor-bundle'
   METEOR_BUNDLE: 'meteor-bundle.tar.gz'
 
 jobs:
@@ -62,53 +61,39 @@ jobs:
           mv ${{ github.event.repository.name }}.tar.gz ${{ env.METEOR_BUNDLE }}
         shell: bash
 
-      # - name: Collect data
-      #   id: data
-      #   run: |
-      #     TAG=$(echo ${{ github.ref }} | cut -d'/' -f 3)
-      #     echo ::set-output name=TAG::${TAG}
-      #     echo ::set-output name=REPO::${{ github.repository }}
-      #     echo ::set-output name=METEOR_BUNDLE_SRC::${{ github.event.repository.name }}.tar.gz
-      #   shell: bash
-
       - name: Upload Meteor Bundle to the Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.METEOR_BUNDLE }}
           path: ${{ env.METEOR_BUNDLE }}
 
-  release-bundle:
-    runs-on: ubuntu-20.04
-    needs: [build]
-    steps:
-      - name: Download bundle Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: ${{ env.METEOR_BUNDLE }}
+  # release-bundle:
+  #   runs-on: ubuntu-20.04
+  #   needs: [build]
+  #   steps:
+  #     - name: Download bundle Artifact
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: ${{ env.METEOR_BUNDLE }}
 
-      - name: Debug
-        run: |
-          ls -alh ./
-        shell: bash
+  #     - name: Retrieve UPLOAD_URL
+  #       id: get_upload_url
+  #       run: |
+  #         TAG=$(echo ${{ github.ref }} | cut -d'/' -f 3)
+  #         REPO=${{ github.repository }}
+  #         upload_url=$(curl -sL https://api.github.com/repos/${REPO}/releases/tags/${TAG} | jq -r '.upload_url')
+  #         echo ::set-output name=UPLOAD_URL::$upload_url
+  #       shell: bash
 
-
-      - name: Retrieve UPLOAD_URL
-        id: get_upload_url
-        run: |
-          TAG=$(echo ${{ github.ref }} | cut -d'/' -f 3)
-          REPO=${{ github.repository }}
-          upload_url=$(curl -sL https://api.github.com/repos/${REPO}/releases/tags/${TAG} | jq -r '.upload_url')
-          echo ::set-output name=UPLOAD_URL::$upload_url
-        shell: bash
-      - name: Upload Meteor Bundle to Release Assets
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.get_upload_url.outputs.upload_url }}
-          asset_path: ./${{ env.METEOR_BUNDLE }}
-          asset_name: ${{ env.METEOR_BUNDLE }}
-          asset_content_type: application/gzip
+  #     - name: Upload Meteor Bundle to Release Assets
+  #       uses: actions/upload-release-asset@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         upload_url: ${{ steps.get_upload_url.outputs.upload_url }}
+  #         asset_path: ./${{ env.METEOR_BUNDLE }}
+  #         asset_name: ${{ env.METEOR_BUNDLE }}
+  #         asset_content_type: application/gzip
 
   docker:
     runs-on: ubuntu-20.04
@@ -128,13 +113,16 @@ jobs:
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
+
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Build and push Docker Image
         id: docker_build
         uses: docker/build-push-action@v2
@@ -146,5 +134,6 @@ jobs:
           tags: |
             ${{ github.repository }}:latest
             ${{ github.repository }}:${{ steps.get_tag.outputs.tag }}
+
       - name: Docker Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
