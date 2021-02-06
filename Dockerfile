@@ -1,10 +1,14 @@
 FROM node:12-alpine as builder
 
+ARG BUNDLE=./meteor-bundle.tar.gz
+
+RUN echo "The BUNDLE is $BUNDLE"
+
 WORKDIR /usr/src/app
 
 RUN apk add --no-cache --virtual .gyp python make g++
 
-COPY meteor-bundle.tar.gz ./
+COPY $BUNDLE ./
 
 RUN tar -xzvf recorder.tgz \
 	&& (cd bundle/programs/server && npm install) \
