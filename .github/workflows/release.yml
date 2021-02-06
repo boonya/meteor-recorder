@@ -43,7 +43,7 @@ jobs:
 
   build:
     runs-on: ubuntu-20.04
-    needs: [lint, test]
+    # needs: [lint, test]
     steps:
       - name: Checking repo out
         uses: actions/checkout@v1
