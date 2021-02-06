@@ -1,9 +1,8 @@
 version: '3'
 services:
   recorder:
-    container_name: recorder
+    container_name: meteor-ip-cam-recorder
     image: boonya/meteor-ip-cam-recorder:latest
-    # build: .
     depends_on:
       - mongo
     network_mode: host
@@ -17,8 +16,8 @@ services:
     restart: unless-stopped
 
   mongo:
-    image: mongo:latest
     container_name: mongo
+    image: mongo:latest
     ports:
       - 27017:27017
     volumes:
