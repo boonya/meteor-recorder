@@ -127,6 +127,7 @@ jobs:
         id: debug
         run: |
           ls -alh ./
+          pwd
         shell: bash
 
       - name: Build and push Docker Image
