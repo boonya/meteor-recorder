@@ -1,8 +1,8 @@
-name: Verification by linting & testing
+name: Verification
 
 on:
   push:
-    # tags-ignore: ['*']
+    tags-ignore: ['**']
     paths-ignore: ['**.md', 'LICENCE']
   pull_request:
     types: [opened]
