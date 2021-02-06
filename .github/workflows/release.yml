@@ -1,4 +1,4 @@
-name: release
+name: Build meteor bundle, docker image and release it
 
 on:
   release:
@@ -116,9 +116,10 @@ jobs:
         run: |
           ls -alh ./
           ls -alh ../
-          pwd
-          echo ${{ github.ref }} | cut -d'/' -f 3
-          echo ${GITHUB_WORKSPACE}
+          ls -alh ../../
+          echo "PWD: $(pwd)"
+          echo TAG: "${{ github.ref }} | cut -d'/' -f 3"
+          echo "GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}"
         shell: bash
 
       - name: Set up QEMU

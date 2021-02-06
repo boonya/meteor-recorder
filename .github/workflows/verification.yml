@@ -1,10 +1,10 @@
-name: verification
+name: Verification by linting & testing
 
 on:
-  push:
-    paths-ignore:
-      - '**.md'
-      - 'LICENCE'
+  # push:
+  #   paths-ignore:
+  #     - '**.md'
+  #     - 'LICENCE'
   pull_request:
     paths-ignore:
       - '**.md'
