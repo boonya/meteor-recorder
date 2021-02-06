@@ -99,6 +99,9 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [build]
     steps:
+      - name: Checking repo out
+        uses: actions/checkout@v1
+
       - name: Download bundle Artifact
         uses: actions/download-artifact@v2
         with:
@@ -138,8 +141,8 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          # context: .
-          # file: ./Dockerfile
+          context: .
+          file: ./Dockerfile
           platforms: linux/amd64, linux/arm64
           build-args: |
             BUNDLE=${{ env.METEOR_BUNDLE }}
