@@ -10,6 +10,7 @@ on:
 env:
   NODE: '12.20.1'
   METEOR: '2.0'
+  METEOR_BUNDLE_ARTIFACT: 'meteor-bundle'
   METEOR_BUNDLE: 'meteor-bundle.tar.gz'
 
 jobs:
@@ -59,6 +60,11 @@ jobs:
       - name: Build application
         run: npm run build
 
+      - name: Rename bundle file
+        run: |
+          mv ${{ github.event.repository.name }}.tar.gz ${{ env.METEOR_BUNDLE }}
+        shell: bash
+
       # - name: Collect data
       #   id: data
       #   run: |
@@ -73,11 +79,6 @@ jobs:
         with:
           name: ${{ env.METEOR_BUNDLE }}
           path: ${{ github.event.repository.name }}.tar.gz
-
-      - name: Debug
-        run: |
-          ls -alh ./
-        shell: bash
 
   release-bundle:
     runs-on: ubuntu-20.04
