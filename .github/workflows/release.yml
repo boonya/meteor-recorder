@@ -117,6 +117,7 @@ jobs:
           ls -alh ./
           pwd
           echo ${{ github.ref }} | cut -d'/' -f 3
+          echo ${{ GITHUB_WORKSPACE }}
         shell: bash
 
       - name: Set up QEMU
@@ -135,8 +136,8 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          context: .
-          file: ./Dockerfile
+          # context: .
+          # file: ./Dockerfile
           platforms: linux/amd64, linux/arm64
           build-args: |
             BUNDLE=./${{ env.METEOR_BUNDLE }}

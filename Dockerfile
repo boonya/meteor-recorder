@@ -2,15 +2,21 @@ FROM node:12-alpine as builder
 
 ARG BUNDLE=meteor-ip-cam-recorder.tar.gz
 
-RUN echo "The BUNDLE is $BUNDLE"
+RUN LIST=$(ls -alh .) \
+	&& echo "The BUNDLE is $BUNDLE" \
+	&& echo "Listing: $LIST"
 
-COPY $BUNDLE /usr/src/app/
+COPY $BUNDLE /usr/src/app/bundle.tgz
 
 WORKDIR /usr/src/app
 
+RUN LIST2=$(ls -alh .) \
+	&& echo "The BUNDLE is $BUNDLE" \
+	&& echo "Listing 2: $LIST2"
+
 RUN apk add --no-cache --virtual .gyp python make g++
 
-RUN tar -xzvf $BUNDLE \
+RUN tar -xzvf bundle.tgz \
 	&& (cd bundle/programs/server && npm install) \
 	&& apk del .gyp
 
