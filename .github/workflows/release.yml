@@ -117,9 +117,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_upload_url.outputs.upload_url }}
-          asset_path: artifacts.zip
-          asset_name: artifacts
-          asset_content_type: application/zip
+          asset_path: ${{ env.RELEASE_ARTIFACTS }}
+          asset_name: ${{ env.RELEASE_ARTIFACTS }}
+          asset_content_type: application/gzip
 
   docker-image:
     runs-on: ubuntu-20.04
