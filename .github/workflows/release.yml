@@ -78,7 +78,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.METEOR_BUNDLE }}
-          path: ${{ github.event.repository.name }}.tar.gz
+          path: ${{ env.METEOR_BUNDLE }}
 
   release-bundle:
     runs-on: ubuntu-20.04
