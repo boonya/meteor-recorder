@@ -1,14 +1,12 @@
-name: verification
+name: Verification
 
 on:
   push:
-    paths-ignore:
-      - '**.md'
-      - 'LICENCE'
+    # tags-ignore: ['v*']
+    paths-ignore: ['**.md', 'LICENCE']
   pull_request:
-    paths-ignore:
-      - '**.md'
-      - 'LICENCE'
+    types: [opened]
+    paths-ignore: ['**.md', 'LICENCE']
 
 env:
   NODE: '12.20.1'
