@@ -90,6 +90,11 @@ jobs:
         with:
           name: artifacts
 
+      - name: Prepare Release Assets
+        run: |
+          zip --junk-paths artifacts.zip * .*
+        shell: bash
+
       - name: Retrieve UPLOAD_URL
         id: get_upload_url
         run: |
@@ -97,11 +102,6 @@ jobs:
           REPO=${{ github.repository }}
           upload_url=$(curl -sL https://api.github.com/repos/${REPO}/releases/tags/${TAG} | jq -r '.upload_url')
           echo ::set-output name=UPLOAD_URL::$upload_url
-        shell: bash
-
-      - name: Prepare Release Assets
-        run: |
-          zip --junk-paths artifacts.zip * .*
         shell: bash
 
       - name: Upload Release Assets
