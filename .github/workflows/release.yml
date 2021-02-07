@@ -8,7 +8,6 @@ env:
   NODE: '12.20.1'
   METEOR: '2.0'
   METEOR_BUNDLE: 'meteor-bundle.tar.gz'
-  RELEASE_ARTIFACTS: 'meteor-ip-cam-recorder.zip'
 
 jobs:
   lint:
@@ -100,20 +99,9 @@ jobs:
           echo ::set-output name=UPLOAD_URL::$upload_url
         shell: bash
 
-      # - name: Upload Meteor Bundle to Release Assets
-      #   uses: actions/upload-release-asset@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.get_upload_url.outputs.upload_url }}
-      #     asset_path: ./${{ env.METEOR_BUNDLE }}
-      #     asset_name: ${{ env.METEOR_BUNDLE }}
-      #     asset_content_type: application/gzip
-
       - name: Prepare Release Assets
         run: |
-          # tar -czvf ${{ env.RELEASE_ARTIFACTS }} * .*
-          zip --junk-paths ${{ env.RELEASE_ARTIFACTS }} * .*
+          zip --junk-paths artifacts.zip * .*
         shell: bash
 
       - name: Upload Release Assets
@@ -122,8 +110,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_upload_url.outputs.upload_url }}
-          asset_path: ${{ env.RELEASE_ARTIFACTS }}
-          asset_name: ${{ env.RELEASE_ARTIFACTS }}
+          asset_path: artifacts.zip
+          asset_name: artifacts.zip
           asset_content_type: application/zip
 
   docker-image:
