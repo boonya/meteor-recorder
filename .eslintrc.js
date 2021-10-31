@@ -7,7 +7,6 @@ module.exports = {
 	extends: [
 		'bluedrop',
 		'bluedrop/config/node',
-		// 'bluedrop/config/babel',
 	],
 	globals: {
 		NODE_ENV: true,

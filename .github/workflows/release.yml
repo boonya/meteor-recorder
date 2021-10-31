@@ -5,8 +5,8 @@ on:
     types: [published]
 
 env:
-  NODE: '12.20.1'
-  METEOR: '2.0'
+  NODE: '14.18.1'
+  METEOR: '2.5'
   METEOR_BUNDLE: 'meteor-bundle.tar.gz'
 
 jobs:
@@ -75,13 +75,13 @@ jobs:
             docker-compose.yaml
             .env.mongo.template
             .env.recorder.template
-            meteor-ip-cam-recorder.service
+            meteor-recorder.service
             README.md
-            LICENCE
+            LICENSE
           if-no-files-found: error
 
   release:
-    name: Release atrifacts
+    name: Release artifacts
     runs-on: ubuntu-20.04
     needs: [build-meteor-bundle]
     steps:

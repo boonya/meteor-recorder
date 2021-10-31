@@ -41,12 +41,13 @@ export default class Recorder {
 	}
 
 	_createRecorder(_id, uri, title) {
+		const prefix = title.replace(/ /ug, '_');
 		const recorder = new RtspRecorder(uri, RECORDER.FOLDER, {
 			title,
-			filePattern: title && `${title.replace(/%/ug, '%%').replace(/ /ug, '_')}/%Y.%m.%d/%H.%M.%S`,
+			playlistName: prefix && `${prefix}-$(date +%Y.%m.%d-%H.%M.%S)`,
+			filePattern: prefix && `${prefix.replace(/%/ug, '%%')}-%Y.%m.%d/%H.%M.%S`,
 			segmentTime: RECORDER.SEGMENT_TIME,
 			dirSizeThreshold: RECORDER.DIR_SIZE_THRESHOLD,
-			autoClear: RECORDER.AUTO_CLEAR,
 		});
 
 		recorder
@@ -54,15 +55,14 @@ export default class Recorder {
 			.on(RecorderEvents.STOPPED, (...args) => this.eventEmitter.emit(Events.STOPPED, _id, ...args));
 
 		recorder
+			.on(RecorderEvents.START, log(RecorderEvents.START))
 			.on(RecorderEvents.STARTED, log(RecorderEvents.STARTED))
+			.on(RecorderEvents.STOP, log(RecorderEvents.STOP))
 			.on(RecorderEvents.STOPPED, log(RecorderEvents.STOPPED))
 			.on(RecorderEvents.ERROR, log(RecorderEvents.ERROR))
-			.on(RecorderEvents.SEGMENT_STARTED, log(RecorderEvents.SEGMENT_STARTED))
 			.on(RecorderEvents.FILE_CREATED, log(RecorderEvents.FILE_CREATED))
-			.on(RecorderEvents.STOP, log(RecorderEvents.STOP))
 			// .on(RecorderEvents.PROGRESS, log(RecorderEvents.PROGRESS))
 			.on(RecorderEvents.SPACE_FULL, log(RecorderEvents.SPACE_FULL))
-			.on(RecorderEvents.SPACE_WIPED, log(RecorderEvents.SPACE_WIPED));
 
 		return recorder;
 	}
