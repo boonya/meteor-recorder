@@ -4,9 +4,8 @@ on:
   push:
     tags-ignore: ['v*']
     paths-ignore: ['**.md', 'LICENSE']
-    branches: [master]
+    branches: [main]
   pull_request:
-    types: [opened]
     paths-ignore: ['**.md', 'LICENSE']
 
 env:
