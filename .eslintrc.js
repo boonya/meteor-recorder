@@ -4,13 +4,13 @@ module.exports = {
 		meteor: true,
 		node: true,
 	},
+	globals: {
+		NODE_ENV: true,
+	},
 	extends: [
 		'bluedrop',
 		'bluedrop/config/node',
 	],
-	globals: {
-		NODE_ENV: true,
-	},
 	parserOptions: {
 		sourceType: 'module',
 		allowImportExportEverywhere: true,
