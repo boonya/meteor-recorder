@@ -1,6 +1,6 @@
-FROM node:12-alpine as builder
+FROM node:14.18.1-alpine as builder
 
-ARG BUNDLE=meteor-ip-cam-recorder.tar.gz
+ARG BUNDLE=meteor-recorder.tar.gz
 COPY $BUNDLE meteor-bundle.tar.gz
 
 RUN apk add --no-cache --virtual .gyp python make g++ \
@@ -9,8 +9,7 @@ RUN apk add --no-cache --virtual .gyp python make g++ \
 	&& (cd bundle/programs/server && npm install) \
 	&& apk del .gyp
 
-
-FROM node:12-alpine
+FROM node:14.18.1-alpine
 
 WORKDIR /usr/src/app
 COPY --from=builder bundle .

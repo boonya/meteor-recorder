@@ -1,8 +1,8 @@
 version: '3'
 services:
   recorder:
-    container_name: meteor-ip-cam-recorder
-    image: boonya/meteor-ip-cam-recorder:latest
+    container_name: meteor-recorder
+    image: boonya/meteor-recorder:latest
     depends_on:
       - mongo
     network_mode: host

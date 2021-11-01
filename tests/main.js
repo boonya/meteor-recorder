@@ -1,9 +1,9 @@
 import assert from 'assert';
 
-describe('meteor-ip-cam-recorder', () => {
+describe('meteor-recorder', () => {
 	it('package.json has correct name', async () => {
 		const {name} = await import(/* webpackChunkName: "package.json" */ '../package.json');
-		assert.strictEqual(name, 'meteor-ip-cam-recorder');
+		assert.strictEqual(name, 'meteor-recorder');
 	});
 
 	if (Meteor.isClient) {

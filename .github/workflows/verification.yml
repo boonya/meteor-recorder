@@ -2,15 +2,15 @@ name: Verification
 
 on:
   push:
-    # tags-ignore: ['v*']
-    paths-ignore: ['**.md', 'LICENCE']
+    tags-ignore: ['v*']
+    paths-ignore: ['**.md', 'LICENSE']
+    branches: [main]
   pull_request:
-    types: [opened]
-    paths-ignore: ['**.md', 'LICENCE']
+    paths-ignore: ['**.md', 'LICENSE']
 
 env:
-  NODE: '12.20.1'
-  METEOR: '2.0'
+  NODE: '14.18.1'
+  METEOR: '2.5'
 
 jobs:
   lint:

@@ -1,6 +1,6 @@
 [Unit]
 Description=Meteor IP Cam Recorder Service
-Documentation=https://github.com/boonya/meteor-ip-cam-recorder
+Documentation=https://github.com/boonya/meteor-recorder
 Requires=docker.service
 After=docker.service
 After=network.target

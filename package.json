@@ -1,10 +1,10 @@
 {
-  "name": "meteor-ip-cam-recorder",
+  "name": "meteor-recorder",
   "description": "Video Recorder application that captures IP Web Cams RTSP streams",
   "license": "MIT",
-  "repository": "https://github.com/boonya/meteor-ip-cam-recorder",
+  "repository": "https://github.com/boonya/meteor-recorder",
   "scripts": {
-    "start": "LOGGING=true meteor run --exclude-archs web.browser.legacy",
+    "start": "meteor run --exclude-archs web.browser.legacy",
     "test": "meteor test --once --driver-package meteortesting:mocha",
     "lint": "eslint .",
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
@@ -12,16 +12,16 @@
     "build": "meteor build ."
   },
   "engines": {
-    "npm": "^6.14.8",
-    "node": "12.20.1"
+    "npm": "6.14.15",
+    "node": "14.18.1"
   },
   "dependencies": {
-    "@babel/runtime": "^7.13.10",
-    "meteor-node-stubs": "^1.0.1",
-    "onvif": "^0.6.4",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "rtsp-video-recorder": "1.4.0-alpha.3"
+    "@babel/runtime": "^7.16.0",
+    "meteor-node-stubs": "^1.1.0",
+    "onvif": "^0.6.5",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "rtsp-video-recorder": "^2.0.1-alpha.6"
   },
   "devDependencies": {
     "eslint": "^7.22.0",
@@ -29,11 +29,11 @@
     "eslint-import-resolver-meteor": "^0.4.0",
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-filenames": "^1.3.2",
-    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
-    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-security": "^1.4.0",
     "eslint-plugin-unicorn": "^27.0.0",
