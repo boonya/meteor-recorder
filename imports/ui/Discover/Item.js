@@ -1,3 +1,4 @@
+import {callMethod} from '../../api/methods';
 import METHODS from '../../methods';
 import {logError} from '../../utils/logger';
 import PropTypes from 'prop-types';
@@ -6,15 +7,17 @@ import React from 'react';
 export default function Item({hostname, port, path, uri, added}) {
 	const [processing, setProcessing] = React.useState(false);
 
-	const handleAdd = React.useCallback((e) => {
-		e.preventDefault();
-		const title = e.target.elements.title.value.trim() || hostname;
-		setProcessing(true);
-		// eslint-disable-next-line promise/prefer-await-to-callbacks
-		Meteor.call(METHODS.CAMERA_CREATE, title, hostname, port, path, uri, (err) => {
-			if (err) { logError('Failed to create camera.')(err); }
-			setProcessing(false);
-		});
+	const handleAdd = React.useCallback(async (e) => {
+		try {
+			e.preventDefault();
+			const title = e.target.elements.title.value.trim() || hostname;
+			setProcessing(true);
+			await callMethod(METHODS.CAMERA_CREATE, title, hostname, port, path, uri);
+		}
+		catch (err) {
+			logError('Failed to create camera.')(err);
+		}
+		setProcessing(false);
 	}, [hostname, path, port, uri]);
 
 	return (

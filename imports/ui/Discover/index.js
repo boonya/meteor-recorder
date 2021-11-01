@@ -1,4 +1,5 @@
 import Collection from '../../api/camera';
+import {callMethod} from '../../api/methods';
 import METHODS from '../../methods';
 import Content from './Content';
 import {useTracker} from 'meteor/react-meteor-data';
@@ -17,21 +18,19 @@ export default function Discover() {
 		setFilter(!filter);
 	}, [filter]);
 
-	const handleDiscover = React.useCallback(() => {
-		setProcessing(true);
-		setPending(false);
-		// eslint-disable-next-line promise/prefer-await-to-callbacks
-		Meteor.call(METHODS.CAMERA_DISCOVER, (err, result) => {
-			if (err) {
-				setError(err);
-				setDiscovered([]);
-			}
-			else {
-				setError(null);
-				setDiscovered(result);
-			}
-			setProcessing(false);
-		});
+	const handleDiscover = React.useCallback(async () => {
+		try {
+			setProcessing(true);
+			setPending(false);
+			setError(null);
+			const result = await callMethod(METHODS.CAMERA_DISCOVER);
+			setDiscovered(result);
+		}
+		catch (err) {
+			setError(err);
+			setDiscovered([]);
+		}
+		setProcessing(false);
 	}, []);
 
 	const list = React.useMemo(() => {

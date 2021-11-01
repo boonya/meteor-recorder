@@ -1,11 +1,13 @@
 version: '3'
 services:
   recorder:
-    container_name: meteor-recorder
-    image: boonya/meteor-recorder:latest
+    container_name: recorder
+    image: boonya/meteor-recorder:v1.1.0
     depends_on:
       - mongo
     network_mode: host
+    # ports:
+    #   - 3000:3000
     volumes:
       - /media/Recorder/:/media/Recorder/:rw
       - /etc/localtime:/etc/localtime:ro
@@ -17,7 +19,7 @@ services:
 
   mongo:
     container_name: mongo
-    image: mongo:latest
+    image: mongo:4.4.10
     ports:
       - 27017:27017
     volumes:
