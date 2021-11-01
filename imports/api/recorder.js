@@ -63,7 +63,7 @@ export default class Recorder {
 			.on(RecorderEvents.STOPPED, log(RecorderEvents.STOPPED))
 			.on(RecorderEvents.ERROR, log(RecorderEvents.ERROR))
 			.on(RecorderEvents.FILE_CREATED, log(RecorderEvents.FILE_CREATED))
-			.on(RecorderEvents.SPACE_FULL, log(RecorderEvents.SPACE_FULL))
+			.on(RecorderEvents.SPACE_FULL, log(RecorderEvents.SPACE_FULL));
 
 		if (ENV.DEBUG_PROGRESS) {
 			recorder.on(RecorderEvents.PROGRESS, logProgress);
@@ -75,7 +75,7 @@ export default class Recorder {
 				})
 				.on(RecorderEvents.STOP, () => {
 					recorder.on(RecorderEvents.PROGRESS, logProgress);
-			});
+				});
 		}
 
 		return recorder;
