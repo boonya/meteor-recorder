@@ -1,4 +1,4 @@
-import {RECORDER} from '../config';
+import {RECORDER, ENV} from '../config';
 import {CAMERA_STATE} from '../constants';
 import {logInfo, logError} from '../utils/logger';
 import {getStream} from './camera';
@@ -6,8 +6,10 @@ import {EventEmitter} from 'events';
 import RtspRecorder, {RecorderEvents} from 'rtsp-video-recorder';
 
 const log = (event) => (...args) => {
-	logInfo('Recorder Event', event, 'at', new Date().toString())(...args);
+	logInfo(`Recorder Event "${event}" at`, new Date().toString())(...args);
 };
+
+const logProgress = log(RecorderEvents.PROGRESS);
 
 export const Events = {
 	INIT: 'init',
@@ -61,8 +63,20 @@ export default class Recorder {
 			.on(RecorderEvents.STOPPED, log(RecorderEvents.STOPPED))
 			.on(RecorderEvents.ERROR, log(RecorderEvents.ERROR))
 			.on(RecorderEvents.FILE_CREATED, log(RecorderEvents.FILE_CREATED))
-			// .on(RecorderEvents.PROGRESS, log(RecorderEvents.PROGRESS))
 			.on(RecorderEvents.SPACE_FULL, log(RecorderEvents.SPACE_FULL))
+
+		if (ENV.DEBUG_PROGRESS) {
+			recorder.on(RecorderEvents.PROGRESS, logProgress);
+		}
+		else {
+			recorder
+				.on(RecorderEvents.STARTED, () => {
+					recorder.removeListener(RecorderEvents.PROGRESS, logProgress);
+				})
+				.on(RecorderEvents.STOP, () => {
+					recorder.on(RecorderEvents.PROGRESS, logProgress);
+			});
+		}
 
 		return recorder;
 	}

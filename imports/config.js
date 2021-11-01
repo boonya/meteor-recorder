@@ -3,6 +3,7 @@ import {
 	RECORDER_SEGMENT_TIME,
 	RECORDER_DIR_SIZE_THRESHOLD,
 	DEBUG,
+	DEBUG_PROGRESS,
 } from './env';
 
 export const RECORDER = {
@@ -13,4 +14,5 @@ export const RECORDER = {
 
 export const ENV = {
 	DEBUG: DEBUG === 'true',
+	DEBUG_PROGRESS: DEBUG_PROGRESS === 'true',
 };
