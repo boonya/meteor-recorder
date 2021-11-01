@@ -2,7 +2,7 @@ version: '3'
 services:
   recorder:
     container_name: recorder
-    image: boonya/meteor-recorder:v1.1.0
+    image: boonya/meteor-recorder:latest
     depends_on:
       - mongo
     network_mode: host
