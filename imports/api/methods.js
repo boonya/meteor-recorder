@@ -5,9 +5,8 @@ export async function callMethod(method, ...args) {
 			if (err) {
 				return reject(err);
 			}
-			else {
-				return resolve(result);
-			}
+
+			return resolve(result);
 		});
 	});
 }

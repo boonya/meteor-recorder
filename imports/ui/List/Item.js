@@ -1,6 +1,6 @@
+import {callMethod} from '../../api/methods';
 import {CAMERA_STATE} from '../../constants';
 import METHODS from '../../methods';
-import {callMethod} from '../../api/methods';
 import {logError} from '../../utils/logger';
 import PropTypes from 'prop-types';
 import React from 'react';
