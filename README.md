@@ -8,3 +8,9 @@
 ```sh
 RECORDER_FOLDER="$(echo ~/Movies/IPCams)" npm start
 ```
+
+or
+
+```sh
+export $(cat .env.local) && npm start
+```

@@ -32,12 +32,16 @@ export default function Item({hostname, port, path, uri, added}) {
 	);
 }
 
+const URI_SHAPE = {
+	device: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool])).isRequired,
+};
+
 Item.propTypes = {
 	added: PropTypes.bool,
 	hostname: PropTypes.string.isRequired,
 	path: PropTypes.string.isRequired,
 	port: PropTypes.string.isRequired,
-	uri: PropTypes.objectOf(PropTypes.objectOf(PropTypes.string)).isRequired,
+	uri: PropTypes.shape(URI_SHAPE).isRequired,
 };
 
 Item.defaultProps = {
