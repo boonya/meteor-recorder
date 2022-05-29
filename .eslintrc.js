@@ -18,7 +18,7 @@ module.exports = {
 	settings: {
 		'import/resolver': 'meteor',
 		react: {
-			version: '18.0',
+			version: '18.1',
 		},
 	},
 	rules: {
