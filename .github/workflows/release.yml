@@ -5,8 +5,8 @@ on:
     types: [published]
 
 env:
-  NODE: '14.18.1'
-  METEOR: '2.5'
+  NODE: '14.18.3'
+  METEOR: '2.6.1'
   METEOR_BUNDLE: 'meteor-bundle.tar.gz'
 
 jobs:
