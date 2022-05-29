@@ -27,7 +27,7 @@ docker build --build-arg BUNDLE=meteor-recorder.tar.gz -t boonya/meteor-recorder
 Meteor Recorder application depends on mongodb, so you have to start your mongodb first. You can do it by running appropriate docker container:
 
 ```sh
-docker run --rm --name meteor_recorder_mongo \
+docker run --rm --name meteor-recorder-mongo \
   -p 27017:27017 \
   -v $(pwd)/mongo/initdb.d/:/docker-entrypoint-initdb.d/:ro \
   -v mongo-configdb:/data/configdb \
@@ -45,10 +45,8 @@ use ${MONGO_DB}
 
 ## Application docker container
 
-And then run meteor-recorder container:
-
 ```sh
-docker run --name meteor_recorder --rm \
+docker run --name meteor-recorder --rm \
   -p 3000:3000 \
   -v $HOME/Movies/recorder/:/media/Recorder/:rw \
   -v /etc/localtime:/etc/localtime:ro \
