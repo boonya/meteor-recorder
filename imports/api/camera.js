@@ -49,15 +49,17 @@ export const toggle = (recorder) => (_id) => {
 async function getCam(hostname, port = '8899', username = 'admin', password = '') {
 	return new Promise((resolve, reject) => {
 		try {
-			new Cam({hostname, port, username, password}, function (camError) {
-				if (camError) {
-					return reject(camError);
+			// eslint-disable-next-line no-new
+			new Cam({hostname, port, username, password}, function (error) {
+				if (error) {
+					return reject(error);
 				}
+				// eslint-disable-next-line no-invalid-this
 				return resolve(this);
 			});
 		}
-		catch (error) {
-			return reject(error);
+		catch (err) {
+			reject(err);
 		}
 	});
 }
