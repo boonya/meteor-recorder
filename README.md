@@ -46,7 +46,8 @@ use ${MONGO_DB}
 ## Application docker container
 
 ```sh
-docker run --name meteor-recorder --rm \
+docker run --rm --name meteor-recorder \
+  --privileged \
   -p 3000:3000 \
   -v $HOME/Movies/recorder/:/media/Recorder/:rw \
   -v /etc/localtime:/etc/localtime:ro \
