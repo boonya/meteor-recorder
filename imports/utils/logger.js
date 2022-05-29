@@ -3,7 +3,7 @@ import {ENV} from '../config';
 /* eslint-disable no-console */
 const logFunction = (method) => {
 	return (...args) => {
-	  return (...additional) => {
+		return (...additional) => {
 			if (!ENV.DEBUG) {
 				return;
 			}
@@ -16,7 +16,7 @@ const logFunction = (method) => {
 			else {
 				console[method](...args);
 			}
-	  };
+		};
 	};
 };
 

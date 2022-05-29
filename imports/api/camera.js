@@ -46,27 +46,40 @@ export const toggle = (recorder) => (_id) => {
 	}
 };
 
-export function getStream(hostname, port = '8899', username = 'admin', password = '') {
+async function getCam(hostname, port = '8899', username = 'admin', password = '') {
 	return new Promise((resolve, reject) => {
 		try {
-			// eslint-disable-next-line no-new
 			new Cam({hostname, port, username, password}, function (camError) {
 				if (camError) {
-					reject(camError);
-					return;
+					return reject(camError);
 				}
-				// eslint-disable-next-line no-invalid-this
-				this.getStreamUri({protocol: 'RTSP'}, (getStreamError, stream) => {
-					if (getStreamError) {
-						reject(getStreamError);
-						return;
-					}
-					resolve(stream);
-				});
+				return resolve(this);
 			});
 		}
 		catch (error) {
-			reject(error);
+			return reject(error);
+		}
+	});
+}
+
+export function getProfiles(cam) {
+	return cam.profiles.map(({name, $}) => ({name, token: $.token}));
+}
+
+export async function getStream(...args) {
+	const cam = await getCam(...args);
+	const profiles = getProfiles(cam);
+	return new Promise((resolve, reject) => {
+		try {
+			cam.getStreamUri({protocol: 'RTSP', profileToken: profiles[0].token}, (getStreamErr, stream) => {
+				if (getStreamErr) {
+					return reject(getStreamErr);
+				}
+				return resolve(stream);
+			});
+		}
+		catch (err) {
+			reject(err);
 		}
 	});
 }

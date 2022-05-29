@@ -28,18 +28,22 @@ export default class Recorder {
 		this._initAllCams();
 	}
 
-	_initAllCams() {
-		this.list.forEach(async ({_id, title, hostname, port, username, password, state}) => {
-			try {
-				await this.init(_id, title, hostname, port, username, password);
-				if (state === CAMERA_STATE.rec) {
-					this.start(_id);
-				}
+	async _initAllCams() {
+		return Promise.all(this.list.map(this._initCam));
+	}
+
+	async _initCam({_id, title, hostname, port, username, password, state}) {
+		try {
+			await this.init(_id, title, hostname, port, username, password);
+			if (state === CAMERA_STATE.rec) {
+				this.start(_id);
 			}
-			catch (err) {
-				logError('Camera failed to initialize.')({_id, title, hostname, err});
-			}
-		});
+			return _id;
+		}
+		catch (err) {
+			logError('Camera has failed to initialize.')({_id, title, hostname, err});
+			throw new Error('Camera has failed to initialize.');
+		}
 	}
 
 	_createRecorder(_id, uri, title) {
