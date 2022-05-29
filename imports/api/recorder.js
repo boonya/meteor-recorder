@@ -29,7 +29,7 @@ export default class Recorder {
 	}
 
 	async _initAllCams() {
-		return Promise.all(this.list.map(this._initCam));
+		return Promise.all(this.list.map(this._initCam.bind(this)));
 	}
 
 	async _initCam({_id, title, hostname, port, username, password, state}) {
