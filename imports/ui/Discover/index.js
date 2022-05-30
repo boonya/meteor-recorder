@@ -2,6 +2,10 @@ import Collection from '../../api/camera';
 import {callMethod} from '../../api/methods';
 import METHODS from '../../methods';
 import Content from './Content';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Grid from '@mui/material/Grid';
 import {useTracker} from 'meteor/react-meteor-data';
 import React from 'react';
 
@@ -41,14 +45,12 @@ export default function Discover() {
 	}, [discovered, filter, added]);
 
 	return (
-		<div>
-			<button type="button" onClick={handleDiscover} disabled={processing}>Discover new camera</button>
-			<label>
-				Show added <input type="checkbox" onClick={handleFilter} />
-			</label>
-			<div>
-				<Content pending={pending} processing={processing} error={error} list={list} added={added} />
-			</div>
-		</div>
+		<Grid container direction="column" rowGap={3}>
+			<Grid item>
+				<Button onClick={handleDiscover} disabled={processing}>Discover new camera</Button>
+			</Grid>
+			<FormControlLabel control={<Checkbox onClick={handleFilter} />} label="Show added" />
+			<Content pending={pending} processing={processing} error={error} list={list} added={added} />
+		</Grid>
 	);
 }

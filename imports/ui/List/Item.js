@@ -2,20 +2,17 @@ import {callMethod} from '../../api/methods';
 import {CAMERA_STATE} from '../../constants';
 import METHODS from '../../methods';
 import {logError} from '../../utils/logger';
+import RecordButton from './RecordButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Tooltip from '@mui/material/Tooltip';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, {useCallback} from 'react';
 
 export default function Item({_id, title, state}) {
-	const handleToggle = React.useCallback(async () => {
-		try {
-			await callMethod(METHODS.CAMERA_TOGGLE, _id);
-		}
-		catch (err) {
-			logError('Failed to toggle state of camera.')(err);
-		}
-	}, [_id]);
-
-	const handleRemove = React.useCallback(async () => {
+	const handleRemove = useCallback(async () => {
 		// eslint-disable-next-line no-alert
 		if (confirm('Do you really want to remove a camera?')) {
 			try {
@@ -27,17 +24,16 @@ export default function Item({_id, title, state}) {
 		}
 	}, [_id]);
 
-	const toggleButtonLabel = React.useMemo(() => {
-		return state === CAMERA_STATE.rec ? 'Stop recording' : 'Start recording';
-	}, [state]);
-
 	return (
-		<div>
-			{title}{' / '}
-			{state || CAMERA_STATE.idle}{' / '}
-			<button type="button" onClick={handleToggle}>{toggleButtonLabel}</button>{' / '}
-			<button type="button" onClick={handleRemove}>Remove</button>
-		</div>
+		<ListItem>
+			<ListItemText primary={title} secondary={state || CAMERA_STATE.idle} />
+			<RecordButton _id={_id} state={state} />
+			<Tooltip title="Remove">
+				<IconButton onClick={handleRemove} aria-label="Remove">
+					<DeleteIcon />
+				</IconButton>
+			</Tooltip>
+		</ListItem>
 	);
 }
 
