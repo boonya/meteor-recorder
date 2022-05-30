@@ -1,5 +1,6 @@
 import Discover from './Discover';
 import List from './List';
+import Manual from './Manual';
 import RootLayout from './RootLayout';
 import createTheme from './theme';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -15,6 +16,7 @@ export function App() {
 				<Typography variant="h1">IP Web Cams Recorder</Typography>
 				<List />
 				<Discover />
+				<Manual />
 			</RootLayout>
 		</ThemeProvider>
 	);
