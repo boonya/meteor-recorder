@@ -1,15 +1,17 @@
 version: '3'
 services:
-  meteor-recorder:
-    container_name: recorder
+  recorder:
+    container_name: meteor-recorder
     image: boonya/meteor-recorder:latest
+    privileged: true
     depends_on:
-      - meteor-recorder-mongo
-    network_mode: host
-    # ports:
-    #   - 3000:3000
+      - mongo
+    # network_mode: host
+    ports:
+      - 3000:3000
     volumes:
-      - /media/Recorder/:/media/Recorder/:rw
+      # - /media/Recorder/:/media/Recorder/:rw
+      - $HOME/Movies/recorder/:/media/Recorder/:rw
       # - /etc/localtime:/etc/localtime:ro
     env_file:
      - .env.recorder
@@ -17,8 +19,8 @@ services:
       NODE_ENV: development
     restart: unless-stopped
 
-  meteor-recorder-mongo:
-    container_name: mongo
+  mongo:
+    container_name: meteor-recorder-mongo
     image: mongo:4.4.10
     ports:
       - 27017:27017
