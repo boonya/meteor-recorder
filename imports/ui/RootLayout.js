@@ -14,6 +14,7 @@ const Main = styled('main')`
 `;
 
 export default function RootLayout({children, ...props}) {
+	/* eslint-disable react/jsx-key */
 	return (
 		<Grid {...props}>
 			<AppBar position="static" color="primary" enableColorOnDark>
@@ -24,10 +25,11 @@ export default function RootLayout({children, ...props}) {
 				</Toolbar>
 			</AppBar>
 			<Main>
-				{children}
+				{children.map((child) => <Grid>{child}</Grid>)}
 			</Main>
 		</Grid>
 	);
+	/* eslint-enable react/jsx-key */
 }
 
 RootLayout.propTypes = {
