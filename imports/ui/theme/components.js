@@ -18,6 +18,11 @@ export default () => ({
 			color: 'primary',
 		},
 	},
+	MuiFab: {
+		defaultProps: {
+			color: 'primary',
+		},
+	},
 	MuiTextField: {
 		defaultProps: {
 			fullWidth: true,
