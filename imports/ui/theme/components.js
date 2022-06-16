@@ -24,4 +24,9 @@ export default () => ({
 			margin: 'none',
 		},
 	},
+	MuiTooltip: {
+		defaultProps: {
+			arrow: true,
+		},
+	},
 });
