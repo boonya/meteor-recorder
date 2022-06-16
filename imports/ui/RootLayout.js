@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, {useMemo} from 'react';
 
 const Main = styled('main')`
 	display: flex;
@@ -14,7 +14,14 @@ const Main = styled('main')`
 `;
 
 export default function RootLayout({children, ...props}) {
-	/* eslint-disable react/jsx-key */
+	const content = useMemo(() => {
+		if (Array.isArray(children)) {
+			// eslint-disable-next-line react/jsx-key
+			return children.map((child) => <Grid>{child}</Grid>);
+		}
+		return children;
+	}, [children]);
+
 	return (
 		<Grid {...props}>
 			<AppBar position="static" color="primary" enableColorOnDark>
@@ -24,12 +31,9 @@ export default function RootLayout({children, ...props}) {
 					</Typography>
 				</Toolbar>
 			</AppBar>
-			<Main>
-				{children.map((child) => <Grid>{child}</Grid>)}
-			</Main>
+			<Main>{content}</Main>
 		</Grid>
 	);
-	/* eslint-enable react/jsx-key */
 }
 
 RootLayout.propTypes = {
