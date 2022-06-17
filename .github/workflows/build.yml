@@ -6,6 +6,7 @@ on:
     types: [published]
 
 env:
+  IMAGE_NAME: ${{ github.repository }}
   DOCKER_HUB_IMAGE: "hub.docker.com/${{ github.repository }}"
   GHCR_IMAGE: "ghcr.io/${{ github.repository }}"
 
@@ -72,11 +73,6 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [bundle]
     steps:
-      - uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
       - uses: actions/download-artifact@v3
         with:
           name: artifacts
@@ -84,8 +80,6 @@ jobs:
       - name: Define metadata
         id: meta
         run: |
-          ls -alh .
-
           VERSION=$(cat meta.json | jq -r '.version')
           echo ::set-output name=version::${VERSION}
 
@@ -95,10 +89,11 @@ jobs:
           BUNDLE=$(cat meta.json | jq -r '.bundle')
           echo ::set-output name=bundle::${BUNDLE}
 
-          TAGS="${GHCR_IMAGE}:${HASH},${GHCR_IMAGE}:${GITHUB_REF_NAME}"
-          if [[ $GITHUB_REF == ref/head/main ]]; then
-            TAGS="${TAGS},${DOCKER_HUB_IMAGE}:${VERSION},${DOCKER_HUB_IMAGE}:latest"
-          fi
+          TAGS="${env.IMAGE_NAME}:${HASH},${env.IMAGE_NAME}:${GITHUB_REF_NAME}"
+          # TAGS="${GHCR_IMAGE}:${HASH},${GHCR_IMAGE}:${GITHUB_REF_NAME}"
+          # if [[ $GITHUB_REF == ref/head/main ]]; then
+          #   TAGS="${TAGS},${GHCR_IMAGE}:${VERSION},${GHCR_IMAGE}:latest,${DOCKER_HUB_IMAGE}:${VERSION},${DOCKER_HUB_IMAGE}:latest"
+          # fi
           echo ::set-output name=tags::${TAGS}
 
           echo "bundle name: ${BUNDLE}"
@@ -106,13 +101,48 @@ jobs:
           echo "version: ${VERSION}"
           echo "tags: ${TAGS}"
 
+      # - name: Login to GitHub Container Registry
+      #   uses: docker/login-action@v2
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
+        # with:
+        #   username: ${{ secrets.DOCKERHUB_USERNAME }}
+        #   password: ${{ secrets.DOCKERHUB_TOKEN }}
       - uses: docker/setup-qemu-action@v2
       - uses: docker/setup-buildx-action@v2
       - uses: docker/build-push-action@v3
+        id: docker
         with:
           context: .
           platforms: linux/amd64, linux/arm64
-          push: true
+          # push: true
+          # load: true
           tags: ${{ steps.meta.outputs.tags }}
           build-args: |
             BUNDLE=${{ steps.meta.outputs.bundle }}
+
+      - name: "Check what we have"
+        run: |
+          echo "docker image: ${{ steps.docker.outputs.imageid }}"
+          docker export ${{ steps.docker.outputs.imageid }}" > ${{ steps.docker.outputs.imageid }}".tar
+          ls -alh .
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts
+          path: |
+            meta.json
+            ${{ steps.definitions.outputs.bundle }}
+            ${{ steps.docker.outputs.imageid }}".tar
+            .dockerignore
+            Dockerfile
+            docker-compose.yaml
+            .env.mongo.template
+            .env.recorder.template
+            meteor-recorder.service
+            README.md
+            LICENSE
+          if-no-files-found: error
