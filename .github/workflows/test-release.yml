@@ -20,10 +20,10 @@ jobs:
       - name: Extract versions
         id: versions
         run: |
-          BUNDLE = $(cat package.json | jq '.version')
-          NODE    = $(cat package.json | jq '.engines.node')
-          NPM     = $(cat package.json | jq '.engines.npm')
-          METEOR  = $(cat .meteor/release | awk -F'@' '{print $2}')
+          BUNDLE=$(cat package.json | jq '.version')
+          NODE=$(cat package.json | jq '.engines.node')
+          NPM=$(cat package.json | jq '.engines.npm')
+          METEOR=$(cat .meteor/release | awk -F'@' '{print $2}')
 
           echo ::set-output name=bundle::${BUNDLE}
           echo ::set-output name=node::${NODE}

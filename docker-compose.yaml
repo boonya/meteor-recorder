@@ -2,7 +2,7 @@ version: '3'
 services:
   recorder:
     container_name: meteor-recorder
-    image: boonya/meteor-recorder:latest
+    image: boonya/meteor-recorder:next
     privileged: true
     depends_on:
       - mongo
