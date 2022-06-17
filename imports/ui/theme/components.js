@@ -13,6 +13,11 @@ export default () => ({
 			variant: 'contained',
 		},
 	},
+	MuiLoadingButton: {
+		defaultProps: {
+			variant: 'contained',
+		},
+	},
 	MuiIconButton: {
 		defaultProps: {
 			color: 'primary',

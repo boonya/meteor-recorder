@@ -1,7 +1,7 @@
 import {RECORDER, ENV} from '../config';
 import {CAMERA_STATE} from '../constants';
 import {logInfo, logError} from '../utils/logger';
-import {getStream} from './camera';
+import {connect, getProfiles, getStream} from './camera';
 import {EventEmitter} from 'events';
 import RtspRecorder, {RecorderEvents} from 'rtsp-video-recorder';
 
@@ -86,7 +86,9 @@ export default class Recorder {
 	}
 
 	async init(_id, title, hostname, port, username, password) {
-		const {uri} = await getStream(hostname, port, username, password);
+		const cam = await connect(hostname, port, username, password);
+		const profiles = getProfiles(cam);
+		const {uri} = await getStream(cam, profiles[0].token);
 		const recorder = this._createRecorder(_id, uri, title);
 		this.process.set(_id, recorder);
 		return recorder;

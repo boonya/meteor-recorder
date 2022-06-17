@@ -1,16 +1,16 @@
-import Button from '@mui/material/Button';
+import Button from '@mui/lab/LoadingButton';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
+import PropTypes from 'prop-types';
 import React from 'react';
 import {useForm} from 'react-hook-form';
 
-export default function Form(props) {
+export default function Form({onSubmit, loading, ...props}) {
 	const {register, handleSubmit, formState} = useForm({defaultValues: {
 		port: 8899,
 		username: 'admin',
 		password: '',
 	}});
-	const onSubmit = (data) => console.log('onSubmit:', data);
 
 	return (
 		<Grid
@@ -34,6 +34,7 @@ export default function Form(props) {
 				{...register('hostname', {
 					required: 'Hostname is mandatory.',
 				})}
+				placeholder="192.168.1.10"
 				error={Boolean(formState.errors.hostname)}
 				helperText={formState.errors.hostname?.message}
 			/>
@@ -43,6 +44,7 @@ export default function Form(props) {
 				{...register('port', {
 					required: 'Port is mandatory.',
 				})}
+				placeholder="8899"
 				error={Boolean(formState.errors.port)}
 				helperText={formState.errors.port?.message}
 			/>
@@ -61,8 +63,17 @@ export default function Form(props) {
 				helperText={formState.errors.password?.message}
 			/>
 			<Grid item>
-				<Button type="submit">Submit</Button>
+				<Button type="submit" loading={loading} loadingIndicator="Waiting...">Connect</Button>
 			</Grid>
 		</Grid>
 	);
 }
+
+Form.propTypes = {
+	loading: PropTypes.bool,
+	onSubmit: PropTypes.func.isRequired,
+};
+
+Form.defaultProps = {
+	loading: false,
+};

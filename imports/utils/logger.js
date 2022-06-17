@@ -10,7 +10,6 @@ const logFunction = (method) => {
 			if (additional.length) {
 				console.groupCollapsed(...args);
 				console[method](...additional);
-				console[method]('');
 				console.groupEnd();
 			}
 			else {

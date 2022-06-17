@@ -46,42 +46,36 @@ export const toggle = (recorder) => (_id) => {
 	}
 };
 
-async function getCam(hostname, port = '8899', username = 'admin', password = '') {
-	return new Promise((resolve, reject) => {
-		try {
-			// eslint-disable-next-line no-new
-			new Cam({hostname, port, username, password}, function (error) {
+export async function connect(hostname, port, username, password) {
+	try {
+		return await new Promise((resolve, reject) => {
+		// eslint-disable-next-line no-new
+			new Cam({hostname, port, username, password, timeout: 10000}, function (error) {
 				if (error) {
 					return reject(error);
 				}
 				// eslint-disable-next-line no-invalid-this
 				return resolve(this);
 			});
-		}
-		catch (err) {
-			reject(err);
-		}
-	});
+		});
+	}
+	catch (err) {
+		throw new Meteor.Error('Failed to connect', err.message, err);
+	}
 }
 
 export function getProfiles(cam) {
 	return cam.profiles.map(({name, $}) => ({name, token: $.token}));
 }
 
-export async function getStream(...args) {
-	const cam = await getCam(...args);
-	const profiles = getProfiles(cam);
+export async function getStream(cam, profileToken) {
 	return new Promise((resolve, reject) => {
-		try {
-			cam.getStreamUri({protocol: 'RTSP', profileToken: profiles[0].token}, (getStreamErr, stream) => {
-				if (getStreamErr) {
-					return reject(getStreamErr);
-				}
-				return resolve(stream);
-			});
-		}
-		catch (err) {
-			reject(err);
-		}
+		// eslint-disable-next-line promise/prefer-await-to-callbacks
+		cam.getStreamUri({protocol: 'RTSP', profileToken}, (err, stream) => {
+			if (err) {
+				return reject(err);
+			}
+			return resolve(stream);
+		});
 	});
 }

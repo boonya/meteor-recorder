@@ -1,10 +1,9 @@
+import AppBar from './AppBar';
 import styled from '@emotion/styled';
-import AppBar from '@mui/material/AppBar';
 import Grid from '@mui/material/Grid';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import React, {useMemo} from 'react';
+import {Outlet} from 'react-router-dom';
 
 const Main = styled('main')`
 	display: flex;
@@ -24,18 +23,16 @@ export default function RootLayout({children, ...props}) {
 
 	return (
 		<Grid {...props}>
-			<AppBar position="static" color="primary" enableColorOnDark>
-				<Toolbar>
-					<Typography component="h1" variant="h2">
-						IP Web Cams Recorder
-					</Typography>
-				</Toolbar>
-			</AppBar>
+			<AppBar />
 			<Main>{content}</Main>
 		</Grid>
 	);
 }
 
 RootLayout.propTypes = {
-	children: PropTypes.node.isRequired,
+	children: PropTypes.node,
+};
+
+RootLayout.defaultProps = {
+	children: <Outlet />,
 };
