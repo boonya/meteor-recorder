@@ -16,7 +16,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - id: definitions
+      - name: Define metadata
+        id: definitions
         run: |
           METEOR=$(cat .meteor/release | awk -F'@' '{print $2}')
           echo ::set-output name=meteor::${METEOR}
@@ -94,7 +95,7 @@ jobs:
           BUNDLE=$(cat meta.json | jq -r '.bundle')
           echo ::set-output name=bundle::${BUNDLE}
 
-          TAGS="${GHCR_IMAGE}:${HASH},${GHCR_IMAGE}:${{ github.event.ref }}"
+          TAGS="${GHCR_IMAGE}:${HASH},${GHCR_IMAGE}:${GITHUB_REF_NAME}"
           if [[ $GITHUB_REF == ref/head/main ]]; then
             TAGS="${TAGS},${DOCKER_HUB_IMAGE}:${VERSION},${DOCKER_HUB_IMAGE}:latest"
           fi
