@@ -10,7 +10,7 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build:
+  bundle:
     name: Build JavaScript bundle 📦
     runs-on: ubuntu-20.04
     steps:
@@ -70,21 +70,28 @@ jobs:
       #   uses: docker/metadata-action@v4
       #   with:
       #     images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
-      - name: Check what we have
-        run: |
-          echo "tags: ${{ steps.meta.outputs.tags }}"
-          echo "labels: ${{ steps.meta.outputs.labels }}"
+      # - name: Check what we have
+      #   run: |
+      #     echo "tags: ${{ steps.meta.outputs.tags }}"
+      #     echo "labels: ${{ steps.meta.outputs.labels }}"
 
       - uses: actions/download-artifact@v3
         with:
           name: artifacts
 
-      - name: Check what we have
+      - name: Define metadata
+        id: meta
         run: |
           ls -alh .
-          echo "bundle name: ${{ steps.bundle.outputs.name }}"
-          echo "bundle version: ${{ steps.versions.outputs.bundle }}"
+
+          BUNDLE=$(ls meteor-recorder-*.tar.gz)
+          echo ::set-output name=bundle::${BUNDLE}
+
+          TAG=$(echo ${BUNDLE} | sed -nE 's/^meteor\-recorder\-(.+)\.tar\.gz$/\1/p')
+          echo ::set-output name=tag::${TAG}
+
+          echo "bundle name: ${BUNDLE}"
+          echo "bundle tag: ${TAG}"
 
       - uses: docker/setup-qemu-action@v2
       - uses: docker/setup-buildx-action@v2
@@ -93,11 +100,11 @@ jobs:
           context: .
           platforms: linux/amd64, linux/arm64
           build-args: |
-            BUNDLE=${{ steps.bundle.outputs.name }}
+            BUNDLE=${{ steps.meta.outputs.bundle }}
           push: true
           # labels: ${{ steps.meta.outputs.labels }}
           # tags: ${{ steps.meta.outputs.tags }}
           # tags: test
           tags: |
             ${{ env.IMAGE_NAME }}:test
-            ${{ env.IMAGE_NAME }}:${{ steps.versions.outputs.bundle }}
+            ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tag }}
