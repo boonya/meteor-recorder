@@ -16,16 +16,19 @@ jobs:
           NODE=$(cat package.json | jq '.engines.node')
           NPM=$(cat package.json | jq '.engines.npm')
           METEOR=$(cat .meteor/release | awk -F'@' '{print $2}')
+          NVMRC=$(cat .nvmrc)
 
           echo ::set-output name=bundle::${BUNDLE}
           echo ::set-output name=node::${NODE}
           echo ::set-output name=npm::${NPM}
           echo ::set-output name=meteor::${METEOR}
+          echo ::set-output name=nvmrc::${NVMRC}
 
-          echo "bundle version is: ${{ steps.versions.outputs.bundle }}"
-          echo "node version is: ${{ steps.versions.outputs.node }}"
-          echo "npm version is: ${{ steps.versions.outputs.npm }}"
-          echo "meteor version is: ${{ steps.versions.outputs.meteor }}"
+          echo "bundle version is: ${BUNDLE}"
+          echo "node version is: ${NODE}"
+          echo "npm version is: ${NPM}"
+          echo "meteor version is: ${METEOR}"
+          echo ".nvmrc version is: ${NVMRC}"
 
       - uses: meteorengineer/setup-meteor@v1
         with:

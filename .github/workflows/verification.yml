@@ -29,11 +29,11 @@ jobs:
           echo ::set-output name=meteor::${METEOR}
           echo ::set-output name=nvmrc::${NVMRC}
 
-          echo "bundle version is: ${{ BUNDLE }}"
-          echo "node version is: ${{ NODE }}"
-          echo "npm version is: ${{ NPM }}"
-          echo "meteor version is: ${{ METEOR }}"
-          echo ".nvmrc version is: ${{ NVMRC }}"
+          echo "bundle version is: ${BUNDLE}"
+          echo "node version is: ${NODE}"
+          echo "npm version is: ${NPM}"
+          echo "meteor version is: ${METEOR}"
+          echo ".nvmrc version is: ${NVMRC}"
 
       - name: Verify required node version
         run: |
