@@ -22,12 +22,12 @@ export default function Form({onSubmit, loading, ...props}) {
 			{...props}
 		>
 			<TextField
-				label="Title"
-				{...register('title', {
-					required: 'Title is mandatory.',
+				label="Label"
+				{...register('label', {
+					required: 'Lable is mandatory.',
 				})}
-				error={Boolean(formState.errors.title)}
-				helperText={formState.errors.title?.message}
+				error={Boolean(formState.errors.label)}
+				helperText={formState.errors.label?.message}
 			/>
 			<TextField
 				label="Hostname"

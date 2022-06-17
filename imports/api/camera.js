@@ -26,9 +26,9 @@ export function discover() {
 	});
 }
 
-export const create = (recorder) => (title, hostname, port, path, uri, username = 'admin', password = '') => {
-	const _id = Collection.insert({title, hostname, path, port, uri, username, password, state: CAMERA_STATE.idle});
-	recorder.init(_id, title, hostname, port, username, password);
+export const create = (recorder) => (label, hostname, port, username, password) => {
+	const _id = Collection.insert({label, hostname, port, username, password, state: CAMERA_STATE.idle});
+	recorder.init(_id, label, hostname, port, username, password);
 };
 
 export const remove = (recorder) => (_id) => {

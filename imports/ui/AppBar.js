@@ -34,7 +34,7 @@ export default function AppBar() {
 				</Title>
 				<Button
 					component={Link}
-					to={ROUTES.addDevice}
+					to={ROUTES.addDeviceWithONVIF}
 					variant="text"
 					color="inherit"
 					startIcon={<AddIcon />}

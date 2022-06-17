@@ -11,11 +11,11 @@ export default function AddDevice() {
 		<Routes>
 			<Route index element={<ChooseMethod />} />
 			<Route
-				path={getRelativePath(ROUTES.discover, ROUTES.addDevice)}
+				path={getRelativePath(ROUTES.addDeviceWithLANDiscover, ROUTES.addDevice)}
 				element={<Discover />}
 			/>
 			<Route
-				path={getRelativePath(ROUTES.onvif, ROUTES.addDevice)}
+				path={getRelativePath(ROUTES.addDeviceWithONVIF, ROUTES.addDevice)}
 				element={<Onvif />}
 
 			/>

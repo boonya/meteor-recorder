@@ -1,9 +1,14 @@
 const home = '/';
 const addDevice = '/add';
-const discover = `${addDevice}/discover`;
-const onvif = `${addDevice}/onvif`;
+const addDeviceWithLANDiscover = `${addDevice}/discover`;
+const addDeviceWithONVIF = `${addDevice}/onvif`;
 
-export default {home, addDevice, discover, onvif};
+export default {
+	home,
+	addDevice,
+	addDeviceWithLANDiscover,
+	addDeviceWithONVIF,
+};
 
 /**
  * @param {string} route

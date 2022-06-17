@@ -21,7 +21,11 @@ export default function Content({pending, processing, error, list, added}) {
 
 	return (
 		<ul>
-			{list.map((cam) => <li key={cam.hostname}><Item {...cam} added={added.includes(cam.hostname)} /></li>)}
+			{list.map((cam) => (
+				<li key={cam.hostname}>
+					<Item {...cam} added={added.includes(cam.hostname)} />
+				</li>
+			))}
 		</ul>
 	);
 }
