@@ -6,9 +6,6 @@ jobs:
   build:
     name: Build JavaScript bundle 📦
     runs-on: ubuntu-20.04
-    # strategy:
-    #   matrix:
-    #     platform: [linux/amd64, linux/arm64]
     steps:
       - uses: actions/checkout@v3
 
@@ -25,10 +22,10 @@ jobs:
           echo ::set-output name=npm::${NPM}
           echo ::set-output name=meteor::${METEOR}
 
-          echo bundle version is: ${{ steps.versions.outputs.bundle }}
-          echo node version is: ${{ steps.versions.outputs.node }}
-          echo npm version is: ${{ steps.versions.outputs.npm }}
-          echo meteor version is: ${{ steps.versions.outputs.meteor }}
+          echo "bundle version is: ${{ steps.versions.outputs.bundle }}"
+          echo "node version is: ${{ steps.versions.outputs.node }}"
+          echo "npm version is: ${{ steps.versions.outputs.npm }}"
+          echo "meteor version is: ${{ steps.versions.outputs.meteor }}"
 
       - uses: meteorengineer/setup-meteor@v1
         with:
