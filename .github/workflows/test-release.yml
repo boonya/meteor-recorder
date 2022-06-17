@@ -2,6 +2,10 @@ name: "[Test] Build and release meteor bundle 📦 and Docker Image 🐳"
 
 on: [push]
 
+env:
+  REGISTRY: hub.docker.com
+  IMAGE_NAME: boonya/${{ github.repository }}
+
 jobs:
   build:
     name: Build JavaScript bundle 📦
@@ -47,3 +51,47 @@ jobs:
             README.md
             LICENSE
           if-no-files-found: error
+
+  docker:
+    name: Build and publish Docker Image 🐳
+    runs-on: ubuntu-20.04
+    needs: [build]
+    steps:
+      - uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Check what we have
+        run: |
+          echo "tags: ${{ steps.meta.outputs.tags }}"
+          echo "labels: ${{ steps.meta.outputs.labels }}"
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: artifacts
+
+      - name: Check what we have
+        run: |
+          ls -alh .
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          platforms: linux/amd64, linux/arm64
+          build-args: |
+            BUNDLE=${{ steps.bundle.outputs.name }}
+          push: true
+          labels: ${{ steps.meta.outputs.labels }}
+          # tags: ${{ steps.meta.outputs.tags }}
+          # tags: test
+          tags: |
+            ${{ env.IMAGE_NAME }}:latest
+            ${{ env.IMAGE_NAME }}:${{ steps.versions.outputs.bundle }}

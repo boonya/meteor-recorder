@@ -38,8 +38,10 @@ jobs:
 
       - name: Verify required node version
         run: |
-          if [ ${{ steps.versions.outputs.nvmrc }} != ${{ steps.versions.outputs.node }} ];
+          if [ ${{ steps.versions.outputs.nvmrc }} == ${{ steps.versions.outputs.node }} ];
           then
+            echo "Node versions are same"
+          else
             echo "Node version different in .nvmrc file and package.json"
             exit 1
           fi
