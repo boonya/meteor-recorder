@@ -13,22 +13,10 @@ jobs:
         id: versions
         run: |
           BUNDLE=$(cat package.json | jq -r '.version')
-          NODE=$(cat package.json | jq -r '.engines.node')
-          NPM=$(cat package.json | jq -r '.engines.npm')
           METEOR=$(cat .meteor/release | awk -F'@' '{print $2}')
-          NVMRC=$(cat .nvmrc)
 
           echo ::set-output name=bundle::${BUNDLE}
-          echo ::set-output name=node::${NODE}
-          echo ::set-output name=npm::${NPM}
           echo ::set-output name=meteor::${METEOR}
-          echo ::set-output name=nvmrc::${NVMRC}
-
-          echo "bundle version is: ${BUNDLE}"
-          echo "node version is: ${NODE}"
-          echo "npm version is: ${NPM}"
-          echo "meteor version is: ${METEOR}"
-          echo ".nvmrc version is: ${NVMRC}"
 
       - uses: meteorengineer/setup-meteor@v1
         with:
@@ -36,13 +24,20 @@ jobs:
 
       - run: meteor npm install
       - run: meteor build .
+      - name: Rename bundle
+        id: bundle
+        run: |
+          NAME=${{ github.event.repository.name }}-${{ steps.versions.outputs.bundle }}.tar.gz
+          echo ::set-output name=name::${NAME}
+          mv ${{ github.event.repository.name }}.tar.gz ${NAME}
+        shell: bash
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: artifacts
           path: |
-            ${{ github.event.repository.name }}.tar.gz
+            ${{ steps.bundle.outputs.name }}
             .dockerignore
             Dockerfile
             docker-compose.yaml
