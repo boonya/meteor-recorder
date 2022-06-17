@@ -1,4 +1,5 @@
 import AppBar from './AppBar';
+import ErrorBoundary from './ErrorBoundary';
 import LoadingSpinner from './components/LoadingSpinner';
 import styled from '@emotion/styled';
 import Grid from '@mui/material/Grid';
@@ -23,14 +24,18 @@ export default function RootLayout({children, ...props}) {
 	}, [children]);
 
 	return (
-		<Grid {...props}>
-			<AppBar />
-			<Main>
-				<Suspense fallback={<LoadingSpinner local />}>
-					{content}
-				</Suspense>
-			</Main>
-		</Grid>
+		<ErrorBoundary>
+			<Grid {...props}>
+				<AppBar />
+				<Main>
+					<ErrorBoundary>
+						<Suspense fallback={<LoadingSpinner local />}>
+							{content}
+						</Suspense>
+					</ErrorBoundary>
+				</Main>
+			</Grid>
+		</ErrorBoundary>
 	);
 }
 
