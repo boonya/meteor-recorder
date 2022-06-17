@@ -1,10 +1,13 @@
 name: "[Test] Build and release meteor bundle 📦 and Docker Image 🐳"
 
-on: [push]
+on:
+  push:
+  release:
+    types: [published]
 
 env:
   REGISTRY: hub.docker.com
-  IMAGE_NAME: boonya/${{ github.repository }}
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build:
@@ -62,11 +65,11 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      # - name: Extract metadata (tags, labels) for Docker
+      #   id: meta
+      #   uses: docker/metadata-action@v4
+      #   with:
+      #     images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: Check what we have
         run: |
@@ -80,18 +83,21 @@ jobs:
       - name: Check what we have
         run: |
           ls -alh .
+          echo "bundle name: ${{ steps.bundle.outputs.name }}"
+          echo "bundle version: ${{ steps.versions.outputs.bundle }}"
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+      - uses: docker/setup-qemu-action@v2
+      - uses: docker/setup-buildx-action@v2
+      - uses: docker/build-push-action@v3
         with:
           context: .
           platforms: linux/amd64, linux/arm64
           build-args: |
             BUNDLE=${{ steps.bundle.outputs.name }}
           push: true
-          labels: ${{ steps.meta.outputs.labels }}
+          # labels: ${{ steps.meta.outputs.labels }}
           # tags: ${{ steps.meta.outputs.tags }}
           # tags: test
           tags: |
-            ${{ env.IMAGE_NAME }}:latest
+            ${{ env.IMAGE_NAME }}:test
             ${{ env.IMAGE_NAME }}:${{ steps.versions.outputs.bundle }}
