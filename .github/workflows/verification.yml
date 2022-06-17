@@ -8,28 +8,35 @@ on:
   pull_request:
     paths-ignore: ["**.md", "LICENSE"]
 
-env:
-  NODE: "14.19.3"
-  METEOR: "2.7.3"
-
 jobs:
   lint:
     name: Linting 🔎
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - name: Define node version
+        id: versions
+        run: |
+          NODE=$(cat package.json | jq '.engines.node')
+          echo ::set-output name=node::${NODE}
+      - uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.NODE }}
+          node-version: ${{ steps.versions.outputs.node }}
       - run: npm ci
       - run: npm run lint
+
   test:
     name: Testing 🧪
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
+      - name: Define meteor version
+        id: versions
+        run: |
+          METEOR=$(cat .meteor/release | awk -F'@' '{print $2}')
+          echo ::set-output name=meteor::${METEOR}
       - uses: meteorengineer/setup-meteor@v1
         with:
-          meteor-release: ${{ env.METEOR }}
+          meteor-release: ${{ steps.versions.outputs.meteor }}
       - run: meteor npm install
       - run: npm run test

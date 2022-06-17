@@ -11,6 +11,7 @@ jobs:
     #     platform: [linux/amd64, linux/arm64]
     steps:
       - uses: actions/checkout@v3
+
       - name: Define versions
         id: versions
         run: |
@@ -36,8 +37,7 @@ jobs:
           meteor-release: ${{ steps.versions.outputs.meteor }}
 
       - run: meteor npm install
-      - run: meteor build ../
-
+      - run: meteor build .
       # - name: Rename bundle file
       #   run: |
       #     mv ../${{ github.event.repository.name }}.tar.gz ${{ env.METEOR_BUNDLE }}
@@ -48,7 +48,7 @@ jobs:
         with:
           name: artifacts
           path: |
-            ../${{ github.event.repository.name }}.tar.gz
+            ${{ github.event.repository.name }}.tar.gz
             .dockerignore
             Dockerfile
             docker-compose.yaml
