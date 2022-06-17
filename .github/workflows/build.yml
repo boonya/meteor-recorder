@@ -89,11 +89,7 @@ jobs:
           BUNDLE=$(cat meta.json | jq -r '.bundle')
           echo ::set-output name=bundle::${BUNDLE}
 
-          TAGS="${env.IMAGE_NAME}:${HASH},${env.IMAGE_NAME}:${GITHUB_REF_NAME}"
-          # TAGS="${GHCR_IMAGE}:${HASH},${GHCR_IMAGE}:${GITHUB_REF_NAME}"
-          # if [[ $GITHUB_REF == ref/head/main ]]; then
-          #   TAGS="${TAGS},${GHCR_IMAGE}:${VERSION},${GHCR_IMAGE}:latest,${DOCKER_HUB_IMAGE}:${VERSION},${DOCKER_HUB_IMAGE}:latest"
-          # fi
+          TAGS="${{ env.IMAGE_NAME }}:${HASH},${{ env.IMAGE_NAME }}:${GITHUB_REF_NAME}"
           echo ::set-output name=tags::${TAGS}
 
           echo "bundle name: ${BUNDLE}"
@@ -108,8 +104,6 @@ jobs:
         with:
           context: .
           platforms: linux/amd64, linux/arm64
-          # push: true
-          # load: true
           tags: ${{ steps.meta.outputs.tags }}
           build-args: |
             BUNDLE=${{ steps.meta.outputs.bundle }}
@@ -179,6 +173,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_TOKEN_RW }}
-        # with:
-        #   username: ${{ secrets.DOCKERHUB_USERNAME }}
-        #   password: ${{ secrets.DOCKERHUB_TOKEN }}
+          # with:
+          #   username: ${{ secrets.DOCKERHUB_USERNAME }}
+          #   password: ${{ secrets.DOCKERHUB_TOKEN }}
