@@ -38,9 +38,19 @@ jobs:
 
       - name: Verify required node version
         run: |
-          if [ ${{ steps.versions.outputs.nvmrc }} != ${{ steps.versions.outputs.node }} ]
+          if [ ${{ steps.versions.outputs.nvmrc }} != ${{ steps.versions.outputs.node }} ];
           then
             echo "Node version different in .nvmrc file and package.json"
+            exit 1
+          fi
+
+      - name: Verify package version
+        run: |
+          if [[ ${{ steps.versions.outputs.bundle }} =~ ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-((0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(\+([0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*))?$ ]];
+          then
+            echo "Package version string is valid"
+          else
+            echo "Package version string is not valid. See: https://docs.npmjs.com/about-semantic-versioning"
             exit 1
           fi
 
