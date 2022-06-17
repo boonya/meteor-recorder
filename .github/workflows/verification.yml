@@ -1,19 +1,20 @@
-name: Verification
+name: "Verification 👮🏽‍♂️"
 
 on:
   push:
-    tags-ignore: ['*']
-    paths-ignore: ['**.md', 'LICENSE']
+    tags-ignore: ["*"]
+    paths-ignore: ["**.md", "LICENSE"]
     branches: [main]
   pull_request:
-    paths-ignore: ['**.md', 'LICENSE']
+    paths-ignore: ["**.md", "LICENSE"]
 
 env:
-  NODE: '14.18.1'
-  METEOR: '2.5'
+  NODE: "14.19.3"
+  METEOR: "2.7.3"
 
 jobs:
   lint:
+    name: Linting 🔎
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v1
@@ -22,7 +23,8 @@ jobs:
           node-version: ${{ env.NODE }}
       - run: npm ci
       - run: npm run lint
-  test-meteor:
+  test:
+    name: Testing 🧪
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v1

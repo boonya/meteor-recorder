@@ -1,13 +1,13 @@
-name: Build and release bundle and docker image
+name: "Build and release meteor bundle 📦 and Docker Image 🐳"
 
 on:
   release:
     types: [published]
 
 env:
-  NODE: '14.19.3'
-  METEOR: '2.7.3'
-  METEOR_BUNDLE: 'meteor-bundle.tar.gz'
+  NODE: "14.19.3"
+  METEOR: "2.7.3"
+  METEOR_BUNDLE: "meteor-bundle.tar.gz"
 
 jobs:
   lint:
@@ -40,8 +40,8 @@ jobs:
       - name: Run tests
         run: npm run test
 
-  build-meteor-bundle:
-    name: Prepare Meteor Bundle and other artifacts 📦
+  build:
+    name: Build js bundle 📦
     runs-on: ubuntu-20.04
     needs: [lint, test]
     steps:
@@ -83,7 +83,7 @@ jobs:
   release:
     name: Release artifacts 🚀
     runs-on: ubuntu-20.04
-    needs: [build-meteor-bundle]
+    needs: [build]
     steps:
       - name: Download Artifact
         uses: actions/download-artifact@v2
@@ -114,10 +114,10 @@ jobs:
           asset_name: artifacts.zip
           asset_content_type: application/zip
 
-  docker-image:
+  docker:
     name: Build and publish Docker Image 🐳
     runs-on: ubuntu-20.04
-    needs: [build-meteor-bundle]
+    needs: [build]
     steps:
       - name: Download bundle Artifact
         uses: actions/download-artifact@v2
@@ -155,4 +155,3 @@ jobs:
           tags: |
             ${{ github.repository }}:latest
             ${{ github.repository }}:${{ steps.get_tag.outputs.tag }}
-
