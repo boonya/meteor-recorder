@@ -1,8 +1,9 @@
 import AppBar from './AppBar';
+import LoadingSpinner from './components/LoadingSpinner';
 import styled from '@emotion/styled';
 import Grid from '@mui/material/Grid';
 import PropTypes from 'prop-types';
-import React, {useMemo} from 'react';
+import React, {useMemo, Suspense} from 'react';
 import {Outlet} from 'react-router-dom';
 
 const Main = styled('main')`
@@ -24,7 +25,11 @@ export default function RootLayout({children, ...props}) {
 	return (
 		<Grid {...props}>
 			<AppBar />
-			<Main>{content}</Main>
+			<Main>
+				<Suspense fallback={<LoadingSpinner local />}>
+					{content}
+				</Suspense>
+			</Main>
 		</Grid>
 	);
 }

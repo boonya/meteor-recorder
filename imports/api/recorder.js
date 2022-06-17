@@ -44,7 +44,7 @@ export default class Recorder {
 			return _id;
 		}
 		catch (err) {
-			logError('Camera has failed to initialize.')({_id, title: label, hostname, err});
+			logError('Camera has failed to initialize.')({_id, label, hostname, err});
 			throw new Error('Camera has failed to initialize.');
 		}
 	}

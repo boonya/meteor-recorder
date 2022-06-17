@@ -1,6 +1,7 @@
 import {callMethod} from '../../../../api/methods';
 import METHODS from '../../../../methods';
 import {logError} from '../../../../utils/logger';
+import ErrorBoundary from '../../../ErrorBoundary';
 import ConfirmDialog from './ConfirmDialog';
 import Form from './Form';
 import Grid from '@mui/material/Grid';
@@ -31,10 +32,12 @@ export default function Onvif(props) {
 	const onClose = useCallback(() => setDevice(), []);
 
 	return (
-		<Grid {...props}>
-			<Typography variant="h1">ONVIF</Typography>
-			<Form onSubmit={onSubmit} loading={loading} />
-			<ConfirmDialog open={Boolean(device)} data={device} onClose={onClose} />
-		</Grid>
+		<ErrorBoundary>
+			<Grid {...props}>
+				<Typography variant="h1">ONVIF</Typography>
+				<Form onSubmit={onSubmit} loading={loading} />
+				<ConfirmDialog open={Boolean(device)} data={device} onClose={onClose} />
+			</Grid>
+		</ErrorBoundary>
 	);
 }
