@@ -58,7 +58,7 @@ jobs:
   docker:
     name: Build and publish Docker Image 🐳
     runs-on: ubuntu-20.04
-    needs: [build]
+    needs: [bundle]
     steps:
       - uses: docker/login-action@v2
         with:
