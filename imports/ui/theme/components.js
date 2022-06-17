@@ -13,7 +13,17 @@ export default () => ({
 			variant: 'contained',
 		},
 	},
+	MuiLoadingButton: {
+		defaultProps: {
+			variant: 'contained',
+		},
+	},
 	MuiIconButton: {
+		defaultProps: {
+			color: 'primary',
+		},
+	},
+	MuiFab: {
 		defaultProps: {
 			color: 'primary',
 		},
@@ -22,6 +32,11 @@ export default () => ({
 		defaultProps: {
 			fullWidth: true,
 			margin: 'none',
+		},
+	},
+	MuiTooltip: {
+		defaultProps: {
+			arrow: true,
 		},
 	},
 });

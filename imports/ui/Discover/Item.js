@@ -4,7 +4,7 @@ import {logError} from '../../utils/logger';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-export default function Item({hostname, port, path, uri, added}) {
+export default function Item({hostname, port, username, password, added}) {
 	const [processing, setProcessing] = React.useState(false);
 
 	const handleAdd = React.useCallback(async (e) => {
@@ -12,13 +12,13 @@ export default function Item({hostname, port, path, uri, added}) {
 			e.preventDefault();
 			const title = e.target.elements.title.value.trim() || hostname;
 			setProcessing(true);
-			await callMethod(METHODS.CAMERA_CREATE, title, hostname, port, path, uri);
+			await callMethod(METHODS.CAMERA_CREATE, title, hostname, port, username, password);
 		}
 		catch (err) {
 			logError('Failed to create camera.')(err);
 		}
 		setProcessing(false);
-	}, [hostname, path, port, uri]);
+	}, [hostname, password, port, username]);
 
 	return (
 		<form onSubmit={handleAdd}>
@@ -32,16 +32,12 @@ export default function Item({hostname, port, path, uri, added}) {
 	);
 }
 
-const URI_SHAPE = {
-	device: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool])).isRequired,
-};
-
 Item.propTypes = {
 	added: PropTypes.bool,
 	hostname: PropTypes.string.isRequired,
-	path: PropTypes.string.isRequired,
+	password: PropTypes.string.isRequired,
 	port: PropTypes.string.isRequired,
-	uri: PropTypes.shape(URI_SHAPE).isRequired,
+	username: PropTypes.string.isRequired,
 };
 
 Item.defaultProps = {

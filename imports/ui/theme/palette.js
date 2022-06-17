@@ -1,17 +1,17 @@
 export default () => ({
 	mode: 'dark',
 	primary: {
-		main: '#7cb342',
+		main: '#0057b8',
 	},
 	secondary: {
-		main: '#ff6e40',
+		main: '#ffd700',
+	},
+	background: {
+		default: '#000e1f',
+		paper: '#00183d',
 	},
 	text: {
 		primary: '#aab4be',
 		secondary: '#fdfeff',
-	},
-	background: {
-		default: '#072111',
-		paper: '#0d290a',
 	},
 });

@@ -11,7 +11,7 @@ import Tooltip from '@mui/material/Tooltip';
 import PropTypes from 'prop-types';
 import React, {useCallback} from 'react';
 
-export default function Item({_id, title, state}) {
+export default function Item({_id, label, state}) {
 	const handleRemove = useCallback(async () => {
 		// eslint-disable-next-line no-alert
 		if (confirm('Do you really want to remove a camera?')) {
@@ -26,7 +26,7 @@ export default function Item({_id, title, state}) {
 
 	return (
 		<ListItem>
-			<ListItemText primary={title} secondary={state || CAMERA_STATE.idle} />
+			<ListItemText primary={label} secondary={state || CAMERA_STATE.idle} />
 			<RecordButton _id={_id} state={state} />
 			<Tooltip title="Remove">
 				<IconButton onClick={handleRemove} aria-label="Remove">
@@ -39,6 +39,6 @@ export default function Item({_id, title, state}) {
 
 Item.propTypes = {
 	_id: PropTypes.string.isRequired,
+	label: PropTypes.string.isRequired,
 	state: PropTypes.oneOf(Object.values(CAMERA_STATE)).isRequired,
-	title: PropTypes.string.isRequired,
 };
