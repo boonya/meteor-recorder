@@ -12,9 +12,9 @@ jobs:
       - name: Define versions
         id: versions
         run: |
-          BUNDLE=$(cat package.json | jq '.version')
-          NODE=$(cat package.json | jq '.engines.node')
-          NPM=$(cat package.json | jq '.engines.npm')
+          BUNDLE=$(cat package.json | jq -r '.version')
+          NODE=$(cat package.json | jq -r '.engines.node')
+          NPM=$(cat package.json | jq -r '.engines.npm')
           METEOR=$(cat .meteor/release | awk -F'@' '{print $2}')
           NVMRC=$(cat .nvmrc)
 
