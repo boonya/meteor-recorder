@@ -21,7 +21,8 @@ jobs:
           echo ::set-output name=node::${NODE}
       - uses: actions/setup-node@v3
         with:
-          node-version: ${{ steps.versions.outputs.node }}
+          node-version: 14.19.3
+          # node-version: ${{ steps.versions.outputs.node }}
       - run: npm ci
       - run: npm run lint
 
