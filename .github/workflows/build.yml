@@ -7,6 +7,7 @@ on:
 
 env:
   DOCKER_HUB_IMAGE: "hub.docker.com/${{ github.repository }}"
+  GHCR_IMAGE: "ghcr.io/${{ github.repository }}"
 
 jobs:
   bundle:
@@ -23,11 +24,20 @@ jobs:
           VERSION=$(cat package.json | jq -r '.version')
           echo ::set-output name=version::${VERSION}
 
-          TAG="${GITHUB_SHA}"
-          echo ::set-output name=tag::${TAG}
+          HASH="${GITHUB_SHA}"
+          echo ::set-output name=tag::${HASH}
 
-          BUNDLE=${{ github.event.repository.name }}-${TAG}.tar.gz
+          BUNDLE=${{ github.event.repository.name }}-${HASH}.tar.gz
           echo ::set-output name=bundle::${BUNDLE}
+
+          META=$( jq -n \
+            --arg meteor ${METEOR} \
+            --arg version ${VERSION} \
+            --arg hash ${HASH} \
+            --arg bundle ${BUNDLE} \
+            '{"meteor": $meteor, "version": $version, "hash": $hash, "bundle": $bundle}'
+          )
+          echo ${META} > meta.json
 
       - uses: meteorengineer/setup-meteor@v1
         with:
@@ -38,16 +48,13 @@ jobs:
       - name: Rename bundle
         run: |
           mv ${{ github.event.repository.name }}.tar.gz ${{ steps.definitions.outputs.bundle }}
-      - name: Create version file
-        run: |
-          echo ${{ steps.definitions.outputs.version }} > version.txt
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: artifacts
           path: |
-            version.txt
+            meta.json
             ${{ steps.definitions.outputs.bundle }}
             .dockerignore
             Dockerfile
@@ -78,19 +85,20 @@ jobs:
         run: |
           ls -alh .
 
-          BUNDLE=$(ls meteor-recorder-*.tar.gz)
-          echo ::set-output name=bundle::${BUNDLE}
-
-          HASH=$(echo ${BUNDLE} | sed -nE 's/^meteor\-recorder\-(.+)\.tar\.gz$/\1/p')
-          echo ::set-output name=hash::${HASH}
-
-          VERSION=$(cat version.txt)
+          VERSION=$(cat meta.json | jq -r '.version')
           echo ::set-output name=version::${VERSION}
 
-          TAGS="${DOCKER_HUB_IMAGE}:${GITHUB_SHA}"
+          HASH=$(cat meta.json | jq -r '.hash')
+          echo ::set-output name=hash::${HASH}
+
+          BUNDLE=$(cat meta.json | jq -r '.bundle')
+          echo ::set-output name=bundle::${BUNDLE}
+
+          TAGS="${GHCR_IMAGE}:${HASH},${GHCR_IMAGE}:${{ github.event.ref }}"
           if [[ $GITHUB_REF == ref/head/main ]]; then
-            TAGS="${TAGS},${DOCKER_HUB_IMAGE}:latest"
+            TAGS="${TAGS},${DOCKER_HUB_IMAGE}:${VERSION},${DOCKER_HUB_IMAGE}:latest"
           fi
+          echo ::set-output name=tags::${TAGS}
 
           echo "bundle name: ${BUNDLE}"
           echo "hash: ${HASH}"

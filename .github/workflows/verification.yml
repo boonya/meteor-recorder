@@ -15,22 +15,22 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Define versions
-        id: versions
+      - name: Define metadata
+        id: meta
         run: |
-          BUNDLE=$(cat package.json | jq -r '.version')
+          VERSION=$(cat package.json | jq -r '.version')
           METEOR=$(cat .meteor/release | awk -F'@' '{print $2}')
           NVMRC=$(cat .nvmrc)
           NODE=$(cat package.json | jq -r '.engines.node')
           NPM=$(cat package.json | jq -r '.engines.npm')
 
-          echo ::set-output name=bundle::${BUNDLE}
+          echo ::set-output name=version::${VERSION}
           echo ::set-output name=meteor::${METEOR}
           echo ::set-output name=nvmrc::${NVMRC}
           echo ::set-output name=node::${NODE}
           echo ::set-output name=npm::${NPM}
 
-          echo "bundle version is: ${BUNDLE}"
+          echo "bundle version is: ${VERSION}"
           echo "meteor version is: ${METEOR}"
           echo ".nvmrc version is: ${NVMRC}"
           echo "node version is: ${NODE}"
@@ -38,7 +38,7 @@ jobs:
 
       - name: Verify required node version
         run: |
-          if [ ${{ steps.versions.outputs.nvmrc }} == ${{ steps.versions.outputs.node }} ];
+          if [ ${{ steps.meta.outputs.nvmrc }} == ${{ steps.meta.outputs.node }} ];
           then
             echo "Node versions are same"
           else
@@ -48,7 +48,7 @@ jobs:
 
       - name: Verify package version
         run: |
-          if [[ ${{ steps.versions.outputs.bundle }} =~ ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-((0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(\+([0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*))?$ ]];
+          if [[ ${{ steps.meta.outputs.version }} =~ ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-((0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(\+([0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*))?$ ]];
           then
             echo "Package version string is valid"
           else
@@ -79,6 +79,6 @@ jobs:
           echo ::set-output name=meteor::${METEOR}
       - uses: meteorengineer/setup-meteor@v1
         with:
-          meteor-release: "${{ steps.versions.outputs.meteor }}"
+          meteor-release: "${{ steps.meta.outputs.meteor }}"
       - run: meteor npm install
       - run: npm run test
