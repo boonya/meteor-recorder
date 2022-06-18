@@ -31,9 +31,11 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
-      - run: |
+      - name: "Check what we have"
+        run: |
           ls -alh .
-      - uses: .github/workflows/build.yml
+          ls -alhR .github
+      - uses: ./.github/workflows/build.yml
 
   release:
     name: Copy Images from GHCR to DockerHub
