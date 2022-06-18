@@ -34,7 +34,7 @@ jobs:
       - name: "Check"
         run: |
           ls -alh ./.github/workflows/build.yml
-      - uses: ./.github/workflows/build.yml
+      - uses: ./.github/workflows/build
         # with:
         #   GHCR_TOKEN_RW: ${{ secrets.GHCR_TOKEN_RW }}
 
