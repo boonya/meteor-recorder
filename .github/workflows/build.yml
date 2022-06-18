@@ -13,9 +13,6 @@ env:
   GHCR_IMAGE: "ghcr.io/${{ github.repository }}"
 
 jobs:
-  verify:
-    uses: ./.github/workflows/verify.yml
-
   bundle:
     name: Meteor Bundle 📦
     runs-on: ubuntu-20.04

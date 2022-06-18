@@ -27,14 +27,18 @@ jobs:
   #           echo "Head pushed"
   #         fi
 
+  verify:
+    uses: ./.github/workflows/verify.yml
+
   build:
+    needs: [verify]
     uses: ./.github/workflows/build.yml
     secrets: inherit
 
   release:
     name: Copy Images from GHCR to DockerHub
     runs-on: ubuntu-20.04
-    needs: [local-build]
+    needs: [build]
     steps:
       - name: Login to DockerHub
         uses: docker/login-action@v2
