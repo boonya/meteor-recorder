@@ -94,9 +94,6 @@ jobs:
           HASH=$(cat meta.json | jq -r '.hash')
 
           TAGS="${{ env.GHCR_IMAGE }}:${HASH},${{ env.GHCR_IMAGE }}:${GITHUB_REF_NAME}"
-          if [[ $GITHUB_REF == refs/heads/main ]]; then
-            TAGS="${TAGS},${{ env.GHCR_IMAGE }}:${VERSION}"
-          fi
           echo ::set-output name=tags::${TAGS}
 
           echo "package version: ${VERSION}"
