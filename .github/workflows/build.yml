@@ -99,6 +99,8 @@ jobs:
           fi
           echo ::set-output name=tags::${TAGS}
 
+          echo "tags: ${TAGS}"
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:

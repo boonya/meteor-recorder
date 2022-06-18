@@ -12,23 +12,26 @@ env:
   DOCKER_HUB_IMAGE: "${{ github.repository }}"
 
 jobs:
-  # job:
-  #   runs-on: ubuntu-20.04
-  #   steps:
-  #     - name: Define metadata
-  #       id: meta
-  #       run: |
-  #         echo "GITHUB_REF: ${GITHUB_REF}"
-  #         echo "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
-  #         if [[ ${GITHUB_REF} =~ ^refs/tags/ ]];
-  #         then
-  #           echo "Tag pushed"
-  #         else
-  #           echo "Head pushed"
-  #         fi
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Define metadata
+        id: meta
+        run: |
+          echo "GITHUB_REF: ${GITHUB_REF}"
+          echo "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
+          if [[ ${GITHUB_REF} =~ ^refs/tags/ ]];
+          then
+            echo "Tag pushed"
+          else
+            echo "Head pushed"
+          fi
 
-  verify:
-    uses: ./.github/workflows/verify.yml
+          echo "src: ${{ env.GHCR_IMAGE }}:${GITHUB_REF_NAME}"
+          echo "dst: ${{ env.DOCKER_HUB_IMAGE }}:${GITHUB_REF_NAME}"
+
+  # verify:
+  #   uses: ./.github/workflows/verify.yml
 
   build:
     needs: [verify]
