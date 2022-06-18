@@ -99,6 +99,9 @@ jobs:
           fi
           echo ::set-output name=tags::${TAGS}
 
+          echo "package version: ${VERSION}"
+          echo "bundle name: ${BUNDLE}"
+          echo "hash: ${HASH}"
           echo "tags: ${TAGS}"
 
       - name: Login to GitHub Container Registry
