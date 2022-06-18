@@ -2,7 +2,6 @@ name: "Build and publish 🏭"
 
 on:
   workflow_call:
-    # secrets: inherit
   push:
     tags:
       - "*"
@@ -14,8 +13,11 @@ env:
   GHCR_IMAGE: "ghcr.io/${{ github.repository }}"
 
 jobs:
+  verify:
+    uses: ./.github/workflows/verify.yml
+
   bundle:
-    name: Build Meteor Bundle 📦
+    name: Meteor Bundle 📦
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -43,6 +45,11 @@ jobs:
             '{"meteor": $meteor, "version": $version, "hash": $hash, "bundle": $bundle}'
           )
           echo ${META} > meta.json
+
+          echo "meteor version: ${METEOR}"
+          echo "package version: ${VERSION}"
+          echo "hash: ${HASH}"
+          echo "bundle name: ${BUNDLE}"
 
       - uses: meteorengineer/setup-meteor@v1
         with:
@@ -72,7 +79,7 @@ jobs:
           if-no-files-found: error
 
   docker:
-    name: Build Docker Image 🐳
+    name: Docker Image 🐳
     runs-on: ubuntu-20.04
     needs: [bundle]
     steps:

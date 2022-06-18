@@ -27,13 +27,9 @@ jobs:
   #           echo "Head pushed"
   #         fi
 
-  local-build:
+  build:
     uses: ./.github/workflows/build.yml
-    # steps:
-    #   - uses: actions/checkout@v3
-    # - name: "Check"
-    #   run: |
-    #     ls -alh ./.github/workflows/build.yml
+    secrets: inherit
 
   release:
     name: Copy Images from GHCR to DockerHub

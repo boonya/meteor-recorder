@@ -1,6 +1,7 @@
 name: "Verification 👮🏽‍♂️"
 
 on:
+  workflow_call:
   push:
     tags-ignore: ["*"]
     paths-ignore: ["**.md", "LICENSE"]
