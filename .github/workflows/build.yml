@@ -1,6 +1,7 @@
 name: "Build and publish 🏭"
 
 on:
+  workflow_call:
   push:
     tags:
       - "*"
@@ -13,7 +14,7 @@ env:
 
 jobs:
   bundle:
-    name: Build Meteor Bundle 📦
+    name: Meteor Bundle 📦
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -41,6 +42,11 @@ jobs:
             '{"meteor": $meteor, "version": $version, "hash": $hash, "bundle": $bundle}'
           )
           echo ${META} > meta.json
+
+          echo "meteor version: ${METEOR}"
+          echo "package version: ${VERSION}"
+          echo "hash: ${HASH}"
+          echo "bundle name: ${BUNDLE}"
 
       - uses: meteorengineer/setup-meteor@v1
         with:
@@ -70,7 +76,7 @@ jobs:
           if-no-files-found: error
 
   docker:
-    name: Build Docker Image 🐳
+    name: Docker Image 🐳
     runs-on: ubuntu-20.04
     needs: [bundle]
     steps:
@@ -88,10 +94,12 @@ jobs:
           HASH=$(cat meta.json | jq -r '.hash')
 
           TAGS="${{ env.GHCR_IMAGE }}:${HASH},${{ env.GHCR_IMAGE }}:${GITHUB_REF_NAME}"
-          if [[ $GITHUB_REF == ref/head/main ]]; then
-            TAGS="${TAGS},${{ env.GHCR_IMAGE }}:${VERSION}"
-          fi
           echo ::set-output name=tags::${TAGS}
+
+          echo "package version: ${VERSION}"
+          echo "bundle name: ${BUNDLE}"
+          echo "hash: ${HASH}"
+          echo "tags: ${TAGS}"
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2

@@ -1,6 +1,7 @@
 name: "Verification 👮🏽‍♂️"
 
 on:
+  workflow_call:
   push:
     tags-ignore: ["*"]
     paths-ignore: ["**.md", "LICENSE"]
@@ -10,7 +11,7 @@ on:
 
 jobs:
   versions:
-    name: Verify versions
+    name: Versions
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
