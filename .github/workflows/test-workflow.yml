@@ -28,15 +28,13 @@ jobs:
   #         fi
 
   local-build:
-    runs-on: ubuntu-20.04
+    # runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
-      - name: "Check"
-        run: |
-          ls -alh ./.github/workflows/build.yml
+      # - name: "Check"
+      #   run: |
+      #     ls -alh ./.github/workflows/build.yml
       - uses: ./.github/workflows/build
-        # with:
-        #   GHCR_TOKEN_RW: ${{ secrets.GHCR_TOKEN_RW }}
 
   release:
     name: Copy Images from GHCR to DockerHub

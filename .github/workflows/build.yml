@@ -2,8 +2,7 @@ name: "Build and publish 🏭"
 
 on:
   workflow_call:
-    # secrets:
-    #   GHCR_TOKEN_RW: true
+    secrets: inherit
   push:
     tags:
       - "*"
