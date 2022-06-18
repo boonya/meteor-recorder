@@ -16,7 +16,7 @@ jobs:
         run: |
           echo "GITHUB_REF: ${GITHUB_REF}"
           echo "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
-          if [[ ${GITHUB_REF} =~ ^refs/tags/ ]];
+          if [[ $GITHUB_REF =~ ^refs/tags/ ]];
           then
             echo "Tag pushed
           else
