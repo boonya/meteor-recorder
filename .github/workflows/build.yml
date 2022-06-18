@@ -1,13 +1,15 @@
 name: "Build and publish 🏭"
 
 on:
+  workflow_call:
+    # secrets:
+    #   GHCR_TOKEN_RW: true
   push:
     tags:
       - "*"
     branches:
       - main
       - build-*
-  workflow_call:
 
 env:
   GHCR_IMAGE: "ghcr.io/${{ github.repository }}"

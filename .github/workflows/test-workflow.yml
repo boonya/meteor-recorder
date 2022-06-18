@@ -12,32 +12,36 @@ env:
   DOCKER_HUB_IMAGE: "${{ github.repository }}"
 
 jobs:
-  job:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Define metadata
-        id: meta
-        run: |
-          echo "GITHUB_REF: ${GITHUB_REF}"
-          echo "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
-          if [[ ${GITHUB_REF} =~ ^refs/tags/ ]];
-          then
-            echo "Tag pushed"
-          else
-            echo "Head pushed"
-          fi
+  # job:
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - name: Define metadata
+  #       id: meta
+  #       run: |
+  #         echo "GITHUB_REF: ${GITHUB_REF}"
+  #         echo "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
+  #         if [[ ${GITHUB_REF} =~ ^refs/tags/ ]];
+  #         then
+  #           echo "Tag pushed"
+  #         else
+  #           echo "Head pushed"
+  #         fi
 
-  build:
+  local-build:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/workflows/build.yml@bundle
-      - uses: ./.github/workflows/build.yml@docker
+      - name: "Check"
+        run: |
+          ls -alh ./.github/workflows/build.yml
+      - uses: ./.github/workflows/build.yml
+        # with:
+        #   GHCR_TOKEN_RW: ${{ secrets.GHCR_TOKEN_RW }}
 
   release:
     name: Copy Images from GHCR to DockerHub
     runs-on: ubuntu-20.04
-    needs: [build]
+    needs: [local-build]
     steps:
       - name: Login to DockerHub
         uses: docker/login-action@v2
