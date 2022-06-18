@@ -9,7 +9,7 @@ on:
       - build-*
 
 env:
-  IMAGE_NAME: ${{ github.repository }}
+  GHCR_IMAGE: "ghcr.io/${{ github.repository }}"
 
 jobs:
   bundle:
@@ -86,7 +86,7 @@ jobs:
 
           HASH=$(cat meta.json | jq -r '.hash')
 
-          TAGS="${{ env.IMAGE_NAME }}:${HASH},${{ env.IMAGE_NAME }}:${GITHUB_REF_NAME}"
+          TAGS="${{ env.GHCR_IMAGE }}:${HASH},${{ env.GHCR_IMAGE }}:${GITHUB_REF_NAME}"
           echo ::set-output name=tags::${TAGS}
 
       - name: Login to GitHub Container Registry
