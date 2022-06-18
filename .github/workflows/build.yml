@@ -2,7 +2,7 @@ name: "Build and publish 🏭"
 
 on:
   workflow_call:
-    secrets: inherit
+    # secrets: inherit
   push:
     tags:
       - "*"
