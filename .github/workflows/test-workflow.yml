@@ -20,9 +20,9 @@ jobs:
         run: |
           echo "GITHUB_REF: ${GITHUB_REF}"
           echo "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
-          if [[ $GITHUB_REF =~ ^refs/tags/ ]];
+          if [[ ${GITHUB_REF} =~ ^refs/tags/ ]];
           then
-            echo "Tag pushed
+            echo "Tag pushed"
           else
             echo "Head pushed"
           fi
@@ -30,7 +30,8 @@ jobs:
   reusable_workflow_job:
     runs-on: ubuntu-20.04
     steps:
-      - uses: ./.github/workflows/build.yml
+      - uses: actions/checkout@v3
+      - uses: ./.github/workflows/build
 
   release:
     name: Copy Images from GHCR to DockerHub
