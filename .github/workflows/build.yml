@@ -81,12 +81,16 @@ jobs:
       - name: Define metadata
         id: meta
         run: |
+          VERSION=$(cat meta.json | jq -r '.version')
           BUNDLE=$(cat meta.json | jq -r '.bundle')
           echo ::set-output name=bundle::${BUNDLE}
 
           HASH=$(cat meta.json | jq -r '.hash')
 
           TAGS="${{ env.GHCR_IMAGE }}:${HASH},${{ env.GHCR_IMAGE }}:${GITHUB_REF_NAME}"
+          if [[ $GITHUB_REF == ref/head/main ]]; then
+            TAGS="${TAGS},${{ env.GHCR_IMAGE }}:${VERSION}"
+          fi
           echo ::set-output name=tags::${TAGS}
 
       - name: Login to GitHub Container Registry
