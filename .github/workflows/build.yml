@@ -1,4 +1,4 @@
-name: "Meteor Bundle and Docker Image"
+name: "Build and publish 🏭"
 
 on:
   push:
@@ -13,7 +13,7 @@ env:
 
 jobs:
   bundle:
-    name: Build Meteor bundle 📦
+    name: Build Meteor Bundle 📦
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -112,7 +112,7 @@ jobs:
             BUNDLE=${{ steps.meta.outputs.bundle }}
           platforms: linux/amd64, linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
-          outputs: type=docker,dest=${{ steps.meta.repository.image_tar }}
+          outputs: "type=docker,dest=${{ steps.meta.repository.image_tar }}"
 
       - name: "Check what we have"
         run: |
@@ -178,6 +178,3 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_TOKEN_RW }}
-          # with:
-          #   username: ${{ secrets.DOCKERHUB_USERNAME }}
-          #   password: ${{ secrets.DOCKERHUB_TOKEN }}
