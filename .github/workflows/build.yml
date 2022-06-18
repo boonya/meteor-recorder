@@ -3,12 +3,12 @@ name: "Build and publish 🏭"
 on:
   workflow_call:
     secrets: inherit
-  # push:
-  #   tags:
-  #     - "*"
-  #   branches:
-  #     - main
-  #     - build-*
+  push:
+    tags:
+      - "*"
+    branches:
+      - main
+      - build-*
 
 env:
   GHCR_IMAGE: "ghcr.io/${{ github.repository }}"
