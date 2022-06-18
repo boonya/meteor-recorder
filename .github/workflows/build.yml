@@ -2,6 +2,8 @@ name: "Meteor Bundle and Docker Image"
 
 on:
   push:
+    tags:
+      - "*"
     branches:
       - main
       - build-*
