@@ -27,7 +27,7 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN_RW }}
 
       - name: Push Image
-        uses: akhilerm/tag-push-action@v2
+        uses: akhilerm/tag-push-action@v2.0.0
         with:
           src: "${{ env.GHCR_IMAGE }}:${GITHUB_REF_NAME}"
           dst: |

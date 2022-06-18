@@ -1,0 +1,19 @@
+name: "Test workflow"
+
+on:
+  push:
+    tags:
+      - "*"
+    branches:
+      - workflow-*
+
+jobs:
+  job:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Define metadata
+        id: meta
+        run: |
+          echo "GITHUB_REF: ${GITHUB_REF}"
+          echo "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
+          exit 1
