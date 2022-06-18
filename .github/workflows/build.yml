@@ -93,33 +93,46 @@ jobs:
           TAGS="${{ env.IMAGE_NAME }}:${HASH},${{ env.IMAGE_NAME }}:${GITHUB_REF_NAME}"
           echo ::set-output name=tags::${TAGS}
 
-          IMAGE_TAR="docker-${{ github.event.repository.name }}-${HASH}.tar"
-          echo ::set-output name=image_tar::${IMAGE_TAR}
+          IMAGE_AMD64_TAR="docker-${{ github.event.repository.name }}-${HASH}-amd64.tar"
+          echo ::set-output name=image_amd64_tar::${IMAGE_AMD64_TAR}
+
+          IMAGE_ARM64_TAR="docker-${{ github.event.repository.name }}-${HASH}-arm64.tar"
+          echo ::set-output name=image_arm64_tar::${IMAGE_ARM64_TAR}
 
           echo "BUNDLE: ${BUNDLE}"
           echo "HASH: ${HASH}"
           echo "VERSION: ${VERSION}"
           echo "TAGS: ${TAGS}"
-          echo "IMAGE_TAR: ${IMAGE_TAR}"
+          echo "IMAGE_AMD64_TAR: ${IMAGE_AMD64_TAR}"
+          echo "IMAGE_ARM64_TAR: ${IMAGE_ARM64_TAR}"
 
       - uses: docker/setup-qemu-action@v2
       - uses: docker/setup-buildx-action@v2
-      - uses: docker/build-push-action@v3
-        id: docker
+
+      - name: Build amd64 docker image
+        uses: docker/build-push-action@v3
         with:
           context: .
           build-args: |
             BUNDLE=${{ steps.meta.outputs.bundle }}
-          platforms: linux/amd64, linux/arm64
+          # platforms: linux/amd64, linux/arm64
+          platforms: linux/amd64
           tags: ${{ steps.meta.outputs.tags }}
-          outputs: "type=docker,dest=${{ steps.meta.outputs.image_tar }}"
+          outputs: "type=docker,dest=${{ steps.meta.outputs.image_amd64_tar }}"
+
+      - name: Build arm64 docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          build-args: |
+            BUNDLE=${{ steps.meta.outputs.bundle }}
+          # platforms: linux/amd64, linux/arm64
+          platforms: linux/arm64
+          tags: ${{ steps.meta.outputs.tags }}
+          outputs: "type=docker,dest=${{ steps.meta.outputs.image_arm64_tar }}"
 
       - name: "Check what we have"
         run: |
-          echo "imageid: ${{ steps.docker.outputs.imageid }}"
-          echo "digest: ${{ steps.docker.outputs.digest }}"
-          echo "metadata: ${{ steps.docker.outputs.metadata }}"
-          echo "image_tar: ${{ steps.meta.outputs.image_tar }}"
           ls -alh .
 
       - name: Upload Artifacts
@@ -129,7 +142,8 @@ jobs:
           path: |
             meta.json
             ${{ steps.meta.outputs.bundle }}
-            ${{ steps.meta.repository.image_tar }}
+            ${{ steps.meta.outputs.image_amd64_tar }}
+            ${{ steps.meta.outputs.image_arm64_tar }}
             .dockerignore
             Dockerfile
             docker-compose.yaml
