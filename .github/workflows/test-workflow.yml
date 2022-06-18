@@ -27,15 +27,16 @@ jobs:
             echo "Head pushed"
           fi
 
-  reusable_workflow_job:
+  build:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/workflows/build
+      - uses: ./.github/workflows/build.yml
 
   release:
     name: Copy Images from GHCR to DockerHub
     runs-on: ubuntu-20.04
+    needs: [build]
     steps:
       - name: Login to DockerHub
         uses: docker/login-action@v2
