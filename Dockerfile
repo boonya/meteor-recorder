@@ -1,4 +1,4 @@
-FROM node:14.19.3-alpine as builder
+FROM node:14.19.3-alpine3.15 as builder
 
 ARG BUNDLE=meteor-recorder.tar.gz
 COPY $BUNDLE meteor-bundle.tar.gz
@@ -8,7 +8,7 @@ RUN apk add --no-cache --virtual .gyp python3 make g++ \
 	&& rm meteor-bundle.tar.gz \
 	&& (cd bundle/programs/server && npm install)
 
-FROM node:14.19.3-alpine
+FROM node:14.19.3-alpine3.15
 
 WORKDIR /usr/src/app
 COPY --from=builder bundle .
