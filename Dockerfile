@@ -15,4 +15,4 @@ COPY --from=builder bundle .
 
 RUN apk add --no-cache ffmpeg
 VOLUME /mnt
-CMD ["node", "main.js"]
+# CMD ["node", "main.js"]
