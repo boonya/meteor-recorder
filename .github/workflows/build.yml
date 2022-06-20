@@ -120,6 +120,16 @@ jobs:
           HASH=$(cat meta.json | jq -r '.hash')
           echo ::set-output name=hash::${HASH}
 
+          NAME=$(cat meta.json | jq -r '.name')
+          echo ::set-output name=name::${NAME}
+
+          DESCRIPTION=$(cat meta.json | jq -r '.description')
+          echo ::set-output name=description::${DESCRIPTION}
+          LICENSE=$(cat meta.json | jq -r '.license')
+          echo ::set-output name=license::${LICENSE}
+          REPOSITORY=$(cat meta.json | jq -r '.repository')
+          echo ::set-output name=repository::${REPOSITORY}
+
           CREATED=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
           echo ::set-output name=created::${CREATED}
 
