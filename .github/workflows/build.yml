@@ -43,14 +43,14 @@ jobs:
           echo ::set-output name=bundle::${BUNDLE}
 
           META=$( jq -n \
-            --arg meteor ${METEOR} \
-            --arg name ${NAME} \
-            --arg description ${DESCRIPTION} \
-            --arg license ${LICENSE} \
-            --arg repository ${REPOSITORY} \
-            --arg version ${VERSION} \
-            --arg hash ${HASH} \
-            --arg bundle ${BUNDLE} \
+            --arg meteor "${METEOR}" \
+            --arg name "${NAME}" \
+            --arg description "${DESCRIPTION}" \
+            --arg license "${LICENSE}" \
+            --arg repository "${REPOSITORY}" \
+            --arg version "${VERSION}" \
+            --arg hash "${HASH}" \
+            --arg bundle "${BUNDLE}" \
             '{
               "meteor": $meteor,
               "name": $name,
@@ -66,6 +66,8 @@ jobs:
 
           echo "meteor version: ${METEOR}"
           echo "package version: ${VERSION}"
+          echo "package name: ${NAME}"
+          echo "package description: ${DESCRIPTION}"
           echo "hash: ${HASH}"
           echo "bundle name: ${BUNDLE}"
 
