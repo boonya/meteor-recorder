@@ -47,10 +47,13 @@ use ${MONGO_DB}
 
 ```sh
 docker run --rm --name meteor-recorder \
-  --privileged \
+  --env TZ=Europe/Kiev \
   -p 3000:3000 \
-  -v $HOME/Movies/recorder/:/media/Recorder/:rw \
-  -v /etc/localtime:/etc/localtime:ro \
-  --env-file .env.recorder \
+  --env MONGO_URL=mongodb://recorder:${MONGO_PASSWORD}@localhost:27017/recorder \
+  -v $HOME/Movies/recorder:/mnt:rw \
+  --env RECORDER_DIR_SIZE_THRESHOLD=200G \
+  --env RECORDER_SEGMENT_TIME=600 \
+  --env NODE_ENV=development \
+  --env DEBUG=true \
   boonya/meteor-recorder:${tag}
 ```
