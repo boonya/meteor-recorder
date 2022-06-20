@@ -12,23 +12,23 @@ RUN tar -xzvf meteor-bundle.tar.gz \
 FROM node:14.19.3-buster-slim
 
 ARG TITLE="meteor-recorder"
-ARG DESCRIPTION
 ARG LICENSES="MIT"
 ARG SOURCE="https://github.com/boonya/meteor-recorder"
+ARG AUTHORS="Serhii [boonya] Buinytskyi <me@boonya.info>"
+ARG DESCRIPTION
 ARG VERSION
 ARG REVISION
 ARG CREATED
-ARG AUTHORS="Serhii [boonya] Buinytskyi <me@boonya.info>"
 
-LABEL org.opencontainers.image.title="${TITLE}"
-LABEL org.opencontainers.image.description DESCRIPTION
-LABEL org.opencontainers.image.licenses="${LICENSES}" \
-	org.opencontainers.image.authors="${AUTHORS}" \
-	org.opencontainers.image.created="${CREATED}" \
-	org.opencontainers.image.source="${SOURCE}" \
-	org.opencontainers.image.version="${VERSION}" \
-	org.opencontainers.image.revision="${REVISION}" \
-	org.opencontainers.image.base.name="node:14.19.3-buster-slim"
+LABEL org.opencontainers.image.base.name "node:14.19.3-buster-slim"
+LABEL org.opencontainers.image.title $TITLE
+LABEL org.opencontainers.image.licenses $LICENSES
+LABEL org.opencontainers.image.source $SOURCE
+LABEL org.opencontainers.image.authors $AUTHORS
+LABEL org.opencontainers.image.description $DESCRIPTION
+LABEL org.opencontainers.image.version $VERSION
+LABEL org.opencontainers.image.revision $REVISION
+LABEL org.opencontainers.image.created $CREATED
 
 ENV RECORDER_FOLDER="/mnt" \
 	ROOT_URL="http://localhost:3000" \
