@@ -44,10 +44,10 @@ jobs:
 
           META=$( jq -n \
             --arg meteor ${METEOR} \
-            --arg name &{NAME} \
-            --arg description &{DESCRIPTION} \
-            --arg license &{LICENSE} \
-            --arg repository &{REPOSITORY} \
+            --arg name ${NAME} \
+            --arg description ${DESCRIPTION} \
+            --arg license ${LICENSE} \
+            --arg repository ${REPOSITORY} \
             --arg version ${VERSION} \
             --arg hash ${HASH} \
             --arg bundle ${BUNDLE} \
