@@ -20,9 +20,9 @@ ARG REVISION
 ARG CREATED
 ARG AUTHORS="Serhii [boonya] Buinytskyi <me@boonya.info>"
 
-LABEL org.opencontainers.image.title="${TITLE}" \
-	org.opencontainers.image.description="${DESCRIPTION}" \
-	org.opencontainers.image.licenses="${LICENSES}" \
+LABEL org.opencontainers.image.title="${TITLE}"
+LABEL org.opencontainers.image.description="${DESCRIPTION}"
+LABEL org.opencontainers.image.licenses="${LICENSES}" \
 	org.opencontainers.image.authors="${AUTHORS}" \
 	org.opencontainers.image.created="${CREATED}" \
 	org.opencontainers.image.source="${SOURCE}" \
