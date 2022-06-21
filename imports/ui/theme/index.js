@@ -1,5 +1,3 @@
-// eslint-disable-next-line import/no-unassigned-import
-import '@fontsource/pangolin';
 import createComponents from './components';
 import createPalette from './palette';
 import createTypography from './typography';

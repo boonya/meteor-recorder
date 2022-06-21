@@ -1,3 +1,6 @@
+// eslint-disable-next-line import/no-unassigned-import
+import '@fontsource/pangolin';
+
 export default () => ({
 	fontFamily: "'Pangolin', serif",
 	fontSize: 16,
