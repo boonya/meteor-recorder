@@ -72,7 +72,7 @@ export default class Recorder {
 
 		const logProgress = log(RecorderEvents.PROGRESS, title);
 
-		if (ENV.DEBUG_PROGRESS) {
+		if (ENV.SHOW_PROGRESS) {
 			recorder.on(RecorderEvents.PROGRESS, logProgress);
 		}
 		else {

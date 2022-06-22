@@ -4,7 +4,7 @@ import {ENV} from '../config';
 const logFunction = (method) => {
 	return (...args) => {
 		return (...additional) => {
-			if (!ENV.DEBUG) {
+			if (!ENV.SHOW_LOGS) {
 				return;
 			}
 			if (additional.length) {

@@ -54,6 +54,6 @@ docker run --rm --name meteor-recorder \
   --env RECORDER_DIR_SIZE_THRESHOLD=200G \
   --env RECORDER_SEGMENT_TIME=600 \
   --env NODE_ENV=development \
-  --env DEBUG=true \
+  --env SHOW_LOGS=true \
   boonya/meteor-recorder:${tag}
 ```
