@@ -102,6 +102,7 @@ export default class Recorder {
 
 	start(_id) {
 		const recorder = this.process.get(_id);
+		console.log('start:', {_id, process: this.process, recorder});
 		if (recorder.isRecording()) {
 			return;
 		}
@@ -111,6 +112,7 @@ export default class Recorder {
 
 	stop(_id) {
 		const recorder = this.process.get(_id);
+		console.log('stop:', {_id, process: this.process, recorder});
 		if (!recorder.isRecording()) {
 			return;
 		}

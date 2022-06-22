@@ -3,7 +3,7 @@ version: '3'
 services:
   recorder:
     container_name: meteor-recorder
-    image: boonya/meteor-recorder:latest
+    image: boonya/meteor-recorder:test
     networks:
       - db
     privileged: true
@@ -13,11 +13,8 @@ services:
       - 3000:3000
     volumes:
       - $HOME/Movies/recorder:/mnt:rw
-      - /etc/localtime:/etc/localtime:ro
     env_file:
       - .env.recorder
-    environment:
-      NODE_ENV: development
     restart: unless-stopped
 
   mongo:
@@ -31,7 +28,6 @@ services:
       - ./mongo/initdb.d/:/docker-entrypoint-initdb.d/:ro
       - mongo-configdb:/data/configdb
       - mongo-db:/data/db
-      - /etc/localtime:/etc/localtime:ro
     env_file:
       - .env.mongo
     restart: unless-stopped
