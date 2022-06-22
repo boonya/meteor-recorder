@@ -5,11 +5,9 @@ import {connect, getProfiles, getStream} from './camera';
 import {EventEmitter} from 'events';
 import RtspRecorder, {RecorderEvents} from 'rtsp-video-recorder';
 
-const log = (event) => (...args) => {
-	logInfo(`Recorder Event "${event}" at`, new Date().toString())(...args);
+const log = (event, name) => (...args) => {
+	logInfo(`"${name}" emitted "${event}" at`, new Date().toString())(...args);
 };
-
-const logProgress = log(RecorderEvents.PROGRESS);
 
 export const Events = {
 	INIT: 'init',
@@ -64,13 +62,15 @@ export default class Recorder {
 			.on(RecorderEvents.STOPPED, (...args) => this.eventEmitter.emit(Events.STOPPED, _id, ...args));
 
 		recorder
-			.on(RecorderEvents.START, log(RecorderEvents.START))
-			.on(RecorderEvents.STARTED, log(RecorderEvents.STARTED))
-			.on(RecorderEvents.STOP, log(RecorderEvents.STOP))
-			.on(RecorderEvents.STOPPED, log(RecorderEvents.STOPPED))
-			.on(RecorderEvents.ERROR, log(RecorderEvents.ERROR))
-			.on(RecorderEvents.FILE_CREATED, log(RecorderEvents.FILE_CREATED))
-			.on(RecorderEvents.SPACE_FULL, log(RecorderEvents.SPACE_FULL));
+			.on(RecorderEvents.START, log(RecorderEvents.START, title))
+			.on(RecorderEvents.STARTED, log(RecorderEvents.STARTED, title))
+			.on(RecorderEvents.STOP, log(RecorderEvents.STOP, title))
+			.on(RecorderEvents.STOPPED, log(RecorderEvents.STOPPED, title))
+			.on(RecorderEvents.ERROR, log(RecorderEvents.ERROR, title))
+			.on(RecorderEvents.FILE_CREATED, log(RecorderEvents.FILE_CREATED, title))
+			.on(RecorderEvents.SPACE_FULL, log(RecorderEvents.SPACE_FULL, title));
+
+		const logProgress = log(RecorderEvents.PROGRESS, title);
 
 		if (ENV.DEBUG_PROGRESS) {
 			recorder.on(RecorderEvents.PROGRESS, logProgress);
@@ -78,6 +78,9 @@ export default class Recorder {
 		else {
 			recorder
 				.on(RecorderEvents.STARTED, () => {
+					recorder.removeListener(RecorderEvents.PROGRESS, logProgress);
+				})
+				.on(RecorderEvents.STOPPED, () => {
 					recorder.removeListener(RecorderEvents.PROGRESS, logProgress);
 				})
 				.on(RecorderEvents.STOP, () => {
