@@ -1,6 +1,7 @@
 import {RECORDER, ENV} from '../config';
 import {CAMERA_STATE} from '../constants';
 import {logInfo, logError} from '../utils/logger';
+import getDateString from '../utils/dateString';
 import {connect, getProfiles, getStream} from './camera';
 import {EventEmitter} from 'events';
 import RtspRecorder, {RecorderEvents} from 'rtsp-video-recorder';
@@ -48,10 +49,10 @@ export default class Recorder {
 	}
 
 	_createRecorder(_id, uri, title) {
-		const prefix = title.replace(/ /ug, '_');
+		const prefix = title.replace(/[^\w]+/ug, '_');
 		const recorder = new RtspRecorder(uri, RECORDER.FOLDER, {
 			title,
-			playlistName: prefix && `${prefix}-$(date +%Y.%m.%d-%H.%M.%S)`,
+			playlistName: prefix && `${prefix}-${getDateString()}`,
 			filePattern: prefix && `${prefix.replace(/%/ug, '%%')}-%Y.%m.%d/%H.%M.%S`,
 			segmentTime: RECORDER.SEGMENT_TIME,
 			dirSizeThreshold: RECORDER.DIR_SIZE_THRESHOLD,
