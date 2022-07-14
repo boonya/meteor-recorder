@@ -3,7 +3,7 @@ version: '3'
 services:
   recorder:
     container_name: meteor-recorder
-    image: boonya/meteor-recorder:test
+    image: boonya/meteor-recorder:latest
     networks:
       - db
     privileged: true
