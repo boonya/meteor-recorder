@@ -1,15 +1,14 @@
 import {RECORDER, ENV} from '../config';
 import {CAMERA_STATE} from '../constants';
+import getDateString from '../utils/dateString';
 import {logInfo, logError} from '../utils/logger';
 import {connect, getProfiles, getStream} from './camera';
 import {EventEmitter} from 'events';
 import RtspRecorder, {RecorderEvents} from 'rtsp-video-recorder';
 
-const log = (event) => (...args) => {
-	logInfo(`Recorder Event "${event}" at`, new Date().toString())(...args);
+const log = (event, name) => (...args) => {
+	logInfo(`"${name}" emitted "${event}" at`, new Date().toString())(...args);
 };
-
-const logProgress = log(RecorderEvents.PROGRESS);
 
 export const Events = {
 	INIT: 'init',
@@ -50,11 +49,10 @@ export default class Recorder {
 	}
 
 	_createRecorder(_id, uri, title) {
-		const prefix = title.replace(/ /ug, '_');
 		const recorder = new RtspRecorder(uri, RECORDER.FOLDER, {
 			title,
-			playlistName: prefix && `${prefix}-$(date +%Y.%m.%d-%H.%M.%S)`,
-			filePattern: prefix && `${prefix.replace(/%/ug, '%%')}-%Y.%m.%d/%H.%M.%S`,
+			playlistName: title && `${title}-${getDateString()}`,
+			filePattern: title && `${title.replace(/%/ug, '%%')}-%Y.%m.%d/%H.%M.%S`,
 			segmentTime: RECORDER.SEGMENT_TIME,
 			dirSizeThreshold: RECORDER.DIR_SIZE_THRESHOLD,
 		});
@@ -64,20 +62,25 @@ export default class Recorder {
 			.on(RecorderEvents.STOPPED, (...args) => this.eventEmitter.emit(Events.STOPPED, _id, ...args));
 
 		recorder
-			.on(RecorderEvents.START, log(RecorderEvents.START))
-			.on(RecorderEvents.STARTED, log(RecorderEvents.STARTED))
-			.on(RecorderEvents.STOP, log(RecorderEvents.STOP))
-			.on(RecorderEvents.STOPPED, log(RecorderEvents.STOPPED))
-			.on(RecorderEvents.ERROR, log(RecorderEvents.ERROR))
-			.on(RecorderEvents.FILE_CREATED, log(RecorderEvents.FILE_CREATED))
-			.on(RecorderEvents.SPACE_FULL, log(RecorderEvents.SPACE_FULL));
+			.on(RecorderEvents.START, log(RecorderEvents.START, title))
+			.on(RecorderEvents.STARTED, log(RecorderEvents.STARTED, title))
+			.on(RecorderEvents.STOP, log(RecorderEvents.STOP, title))
+			.on(RecorderEvents.STOPPED, log(RecorderEvents.STOPPED, title))
+			.on(RecorderEvents.ERROR, log(RecorderEvents.ERROR, title))
+			.on(RecorderEvents.FILE_CREATED, log(RecorderEvents.FILE_CREATED, title))
+			.on(RecorderEvents.SPACE_FULL, log(RecorderEvents.SPACE_FULL, title));
 
-		if (ENV.DEBUG_PROGRESS) {
+		const logProgress = log(RecorderEvents.PROGRESS, title);
+
+		if (ENV.SHOW_PROGRESS) {
 			recorder.on(RecorderEvents.PROGRESS, logProgress);
 		}
 		else {
 			recorder
 				.on(RecorderEvents.STARTED, () => {
+					recorder.removeListener(RecorderEvents.PROGRESS, logProgress);
+				})
+				.on(RecorderEvents.STOPPED, () => {
 					recorder.removeListener(RecorderEvents.PROGRESS, logProgress);
 				})
 				.on(RecorderEvents.STOP, () => {

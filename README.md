@@ -19,7 +19,7 @@ export $(cat .env.local) && npm start
 
 ```sh
 npm run build
-docker build --build-arg BUNDLE=meteor-recorder.tar.gz -t boonya/meteor-recorder:${tag} .
+docker build -t boonya/meteor-recorder:${tag} .
 ```
 
 ## MongoDB
@@ -53,7 +53,6 @@ docker run --rm --name meteor-recorder \
   -v $HOME/Movies/recorder:/mnt:rw \
   --env RECORDER_DIR_SIZE_THRESHOLD=200G \
   --env RECORDER_SEGMENT_TIME=600 \
-  --env NODE_ENV=development \
-  --env DEBUG=true \
+  --env SHOW_LOGS=true \
   boonya/meteor-recorder:${tag}
 ```
