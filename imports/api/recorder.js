@@ -49,11 +49,10 @@ export default class Recorder {
 	}
 
 	_createRecorder(_id, uri, title) {
-		const prefix = title.replace(/[^\w]+/ug, '_');
 		const recorder = new RtspRecorder(uri, RECORDER.FOLDER, {
 			title,
-			playlistName: prefix && `${prefix}-${getDateString()}`,
-			filePattern: prefix && `${prefix.replace(/%/ug, '%%')}-%Y.%m.%d/%H.%M.%S`,
+			playlistName: title && `${title}-${getDateString()}`,
+			filePattern: title && `${title.replace(/%/ug, '%%')}-%Y.%m.%d/%H.%M.%S`,
 			segmentTime: RECORDER.SEGMENT_TIME,
 			dirSizeThreshold: RECORDER.DIR_SIZE_THRESHOLD,
 		});
