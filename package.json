@@ -30,7 +30,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.32.2",
     "react-router-dom": "^6.3.0",
-    "rtsp-video-recorder": "git+https://github.com/boonya/rtsp-video-recorder.git#274-cant-stop-recording-in-a-docker-container"
+    "rtsp-video-recorder": "^2.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.18.5",
