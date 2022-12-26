@@ -13,6 +13,7 @@ services:
       - 3000:3000
     volumes:
       - $HOME/Movies/recorder:/mnt:rw
+      - /etc/localtime:/etc/localtime:ro
     env_file:
       - .env.recorder
     restart: unless-stopped
@@ -28,6 +29,7 @@ services:
       - ./mongo/initdb.d/:/docker-entrypoint-initdb.d/:ro
       - mongo-configdb:/data/configdb
       - mongo-db:/data/db
+      - /etc/localtime:/etc/localtime:ro
     env_file:
       - .env.mongo
     restart: unless-stopped
