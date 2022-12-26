@@ -34,10 +34,10 @@ ENV RECORDER_FOLDER="/mnt" \
 	ROOT_URL="http://localhost:3000" \
 	PORT=3000
 
-WORKDIR /usr/src/app
-COPY --from=builder bundle .
-
 RUN apt-get update \
 	&& apt-get install -y ffmpeg
+
+WORKDIR /usr/src/app
+COPY --from=builder bundle .
 
 CMD ["node", "main.js"]
