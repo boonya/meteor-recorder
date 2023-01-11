@@ -3,8 +3,8 @@ import {CAMERA_STATE} from '../constants';
 import getDateString from '../utils/date-string';
 import {logInfo, logError} from '../utils/logger';
 import {connect, getProfiles, getStream} from './camera';
+import RtspRecorder, {RecorderEvents} from '@boonya/rtsp-video-recorder';
 import {EventEmitter} from 'events';
-import RtspRecorder, {RecorderEvents} from 'rtsp-video-recorder';
 
 const log = (event, name) => (...args) => {
 	logInfo(`"${name}" emitted "${event}" at`, new Date().toString())(...args);
