@@ -1,4 +1,5 @@
 import TextField from '@mui/material/TextField';
+import PropTypes from 'prop-types';
 import React, {useCallback} from 'react';
 import {useFormContext} from 'react-hook-form';
 
@@ -81,3 +82,11 @@ export default function FieldSet({loading}) {
 		</>
 	);
 }
+
+FieldSet.propTypes = {
+	loading: PropTypes.bool,
+};
+
+FieldSet.defaultProps = {
+	loading: false,
+};
