@@ -20,7 +20,6 @@ export default function AddDevice() {
 				<Route
 					path={getRelativePath(ROUTES.addDeviceWithONVIF, ROUTES.addDevice)}
 					element={<Onvif />}
-
 				/>
 				<Route path="*" element={<NotFound />} />
 			</Routes>

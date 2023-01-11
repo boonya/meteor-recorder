@@ -10,10 +10,10 @@ Meteor.startup(() => {
 
 	recorder
 		.on(Events.STARTED, Meteor.bindEnvironment((_id) => {
-			CameraCollection.update(_id, {$set: {state: CAMERA_STATE.rec}});
+			CameraCollection.upsert(_id, {state: CAMERA_STATE.rec});
 		}))
 		.on(Events.STOPPED, Meteor.bindEnvironment((_id) => {
-			CameraCollection.update(_id, {$set: {state: CAMERA_STATE.idle}});
+			CameraCollection.upsert(_id, {state: CAMERA_STATE.idle});
 		}));
 
 	initMethods(recorder);

@@ -1,11 +1,13 @@
 const home = '/';
 const addDevice = '/add';
+const editDevice = '/edit/:deviceId';
 const addDeviceWithLANDiscover = `${addDevice}/discover`;
 const addDeviceWithONVIF = `${addDevice}/onvif`;
 
 export default {
 	home,
 	addDevice,
+	editDevice,
 	addDeviceWithLANDiscover,
 	addDeviceWithONVIF,
 };

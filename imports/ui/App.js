@@ -12,6 +12,7 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
 const MainScreen = lazy(() => import(/* webpackChunkName: "modules/MainScreen" */'./modules/MainScreen'));
 const AddDevice = lazy(() => import(/* webpackChunkName: "modules/AddDevice" */'./modules/AddDevice'));
+const EditDevice = lazy(() => import(/* webpackChunkName: "modules/EditDevice" */'./modules/EditDevice'));
 
 export function App() {
 	return (
@@ -28,6 +29,7 @@ export function App() {
 								<Route element={<RootLayout />}>
 									<Route index element={<MainScreen />} />
 									<Route path={`${ROUTES.addDevice}/*`} element={<AddDevice />} />
+									<Route path={ROUTES.editDevice} element={<EditDevice />} />
 									<Route path="*" element={<NotFound />} />
 								</Route>
 							</Routes>

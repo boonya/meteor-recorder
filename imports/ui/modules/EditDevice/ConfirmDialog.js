@@ -10,9 +10,9 @@ import React from 'react';
 export default function ConfirmDialog({onConfirm, loading, ...props}) {
 	return (
 		<MuiDialog {...props}>
-			<DialogTitle>The device supports rtsp over http.</DialogTitle>
+			<DialogTitle>Save changes</DialogTitle>
 			<DialogContent>
-				If you really want to add it, press Add. Otherwise press Cancel.
+				If you really want to save the changes press Add.
 			</DialogContent>
 			<DialogActions>
 				<Button
