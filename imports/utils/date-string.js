@@ -1,7 +1,7 @@
 export default function dateString() {
 	const now = new Date();
-	const [date] = now.toISOString().split('T');
-	const [time] = now.toTimeString().split(' ');
+	const [date, _time] = now.toISOString().split('T');
+	const [time] = _time.split('.');
 
 	return [
 		date.replace(/-/ug, '.'),
