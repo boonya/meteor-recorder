@@ -69,7 +69,15 @@ jobs:
       - run: npm run lint
 
   test:
-    name: Testing 🧪
+    name: Test Jest 🧪
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - run: npm i
+      - run: npm run test
+
+  test-meteor:
+    name: Test Meteor 🧪
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -82,4 +90,4 @@ jobs:
         with:
           meteor-release: "${{ steps.meta.outputs.meteor }}"
       - run: meteor npm install
-      - run: npm run test && npm run test:meteor
+      - run: npm run test:meteor
