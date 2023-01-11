@@ -82,4 +82,4 @@ jobs:
         with:
           meteor-release: "${{ steps.meta.outputs.meteor }}"
       - run: meteor npm install
-      - run: npm run test
+      - run: npm run test && npm run test:meteor

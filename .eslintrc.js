@@ -3,6 +3,7 @@ module.exports = {
 	env: {
 		meteor: true,
 		node: true,
+		jest: true,
 	},
 	globals: {
 		NODE_ENV: true,
@@ -18,7 +19,7 @@ module.exports = {
 	settings: {
 		'import/resolver': 'meteor',
 		react: {
-			version: '18.1',
+			version: '18.2',
 		},
 	},
 	rules: {
