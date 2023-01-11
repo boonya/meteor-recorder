@@ -111,10 +111,10 @@ export default class Recorder {
 
 	stop(_id) {
 		const recorder = this.process.get(_id);
-		if (!recorder.isRecording()) {
+		if (!recorder?.isRecording()) {
 			return;
 		}
-		recorder.stop();
+		recorder?.stop();
 		this.process.set(_id, recorder);
 	}
 

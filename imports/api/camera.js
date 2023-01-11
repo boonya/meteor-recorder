@@ -31,6 +31,12 @@ export const create = (recorder) => (label, hostname, port, username, password) 
 	recorder.init(_id, label, hostname, port, username, password);
 };
 
+export const update = (recorder) => (_id, label, hostname, port, username, password) => {
+	recorder.stop(_id);
+	Collection.upsert(_id, {label, hostname, port, username, password, state: CAMERA_STATE.idle});
+	recorder.init(_id, label, hostname, port, username, password);
+};
+
 export const remove = (recorder) => (_id) => {
 	recorder.stop(_id);
 	Collection.remove(_id);
@@ -45,6 +51,11 @@ export const toggle = (recorder) => (_id) => {
 		recorder.start(_id);
 	}
 };
+
+export async function getCameraConfig(_id) {
+	const {label, hostname, port, username} = Collection.findOne(_id);
+	return {label, hostname, port, username};
+}
 
 export async function connect(hostname, port, username, password) {
 	try {
