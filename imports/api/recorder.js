@@ -1,8 +1,8 @@
+import {connect, getProfiles, getStream} from './camera';
 import {RECORDER, ENV} from '../config';
 import {CAMERA_STATE} from '../constants';
 import getDateString from '../utils/date-string';
 import {logInfo, logError} from '../utils/logger';
-import {connect, getProfiles, getStream} from './camera';
 import {EventEmitter} from 'events';
 import RtspRecorder, {RecorderEvents} from 'rtsp-video-recorder';
 
