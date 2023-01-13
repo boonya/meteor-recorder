@@ -1,7 +1,7 @@
-import Collection from '../../api/camera';
-import {callMethod} from '../../api/methods';
-import METHODS from '../../methods';
 import Content from './Content';
+import {callMethod} from '../../api/methods';
+import CameraCollection from '../../collections/camera';
+import METHODS from '../../methods';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -16,7 +16,7 @@ export default function Discover() {
 	const [filter, setFilter] = React.useState(true);
 	const [discovered, setDiscovered] = React.useState([]);
 
-	const added = useTracker(() => Collection.find().fetch().map(({hostname}) => hostname));
+	const added = useTracker(() => CameraCollection.find().fetch().map(({hostname}) => hostname));
 
 	const handleFilter = React.useCallback(() => {
 		setFilter(!filter);

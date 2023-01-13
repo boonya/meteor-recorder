@@ -1,11 +1,7 @@
+import CameraCollection from '../collections/camera';
 import {CAMERA_STATE} from '../constants';
 import {logError} from '../utils/logger';
-import {Mongo} from 'meteor/mongo';
 import {Discovery, Cam} from 'onvif';
-
-const Collection = new Mongo.Collection('camera');
-
-export default Collection;
 
 export function discover() {
 	return new Promise((resolve, reject) => {
@@ -27,23 +23,23 @@ export function discover() {
 }
 
 export const create = (recorder) => (label, hostname, port, username, password) => {
-	const _id = Collection.insert({label, hostname, port, username, password, state: CAMERA_STATE.idle});
+	const _id = CameraCollection.insert({label, hostname, port, username, password, state: CAMERA_STATE.idle});
 	recorder.init(_id, label, hostname, port, username, password);
 };
 
 export const update = (recorder) => (_id, label, hostname, port, username, password) => {
 	recorder.stop(_id);
-	Collection.upsert(_id, {label, hostname, port, username, password, state: CAMERA_STATE.idle});
+	CameraCollection.upsert(_id, {label, hostname, port, username, password, state: CAMERA_STATE.idle});
 	recorder.init(_id, label, hostname, port, username, password);
 };
 
 export const remove = (recorder) => (_id) => {
 	recorder.stop(_id);
-	Collection.remove(_id);
+	CameraCollection.remove(_id);
 };
 
 export const toggle = (recorder) => (_id) => {
-	const {state} = Collection.findOne(_id);
+	const {state} = CameraCollection.findOne(_id);
 	if (state === CAMERA_STATE.rec) {
 		recorder.stop(_id);
 	}
@@ -53,7 +49,7 @@ export const toggle = (recorder) => (_id) => {
 };
 
 export async function getCameraConfig(_id) {
-	const {label, hostname, port, username} = Collection.findOne(_id);
+	const {label, hostname, port, username} = CameraCollection.findOne(_id);
 	return {label, hostname, port, username};
 }
 
