@@ -1,42 +1,57 @@
-import {callMethod} from '../../../../api/methods';
-import METHODS from '../../../../methods';
-import {logError} from '../../../../utils/logger';
-import ErrorBoundary from '../../../ErrorBoundary';
 import ConfirmDialog from './ConfirmDialog';
-import Form from './Form';
+import useConnectDevice from './useConnectDevice';
+import useCreateCamera from './useCreateCamera';
+import ErrorBoundary from '../../../ErrorBoundary';
+import ROUTES from '../../../ROUTES';
+import OnvifDeviceForm from '../../../components/OnvifDeviceForm';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import {useSnackbar} from 'notistack';
 import React, {useCallback, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 
 export default function Onvif(props) {
-	const [device, setDevice] = useState();
-	const [loading, setLoading] = useState(false);
-	const {enqueueSnackbar} = useSnackbar();
+	const [config, setConfig] = useState();
+	const navigate = useNavigate();
 
-	const onSubmit = useCallback(async ({label, hostname, port, username, password}) => {
+	const [connect, {loading: connectLoading}] = useConnectDevice();
+	const [create, {loading: createLoading}] = useCreateCamera();
+
+	const handleConfirm = useCallback(async ({label, hostname, port, username, password}) => {
 		try {
-			setLoading(true);
-			await callMethod(METHODS.CAMERA_CONNECT, hostname, port, username, password);
-			setDevice({label, hostname, port, username, password});
+			await connect({hostname, port, username, password});
+			setConfig({label, hostname, port, username, password});
 		}
-		catch (err) {
-			enqueueSnackbar('Failed to connect to the device.', {variant: 'error'});
-			logError('Failed to connect to the device.')(err.reason);
+		catch {
+		// Nothing to do here
+		}
+	}, [connect]);
+
+	const handleSubmit = useCallback(async () => {
+		try {
+			await create(config);
+			navigate(ROUTES.home);
 		}
 		finally {
-			setLoading(false);
+			setConfig();
 		}
-	}, [enqueueSnackbar]);
+	}, [create, config, navigate]);
 
-	const onClose = useCallback(() => setDevice(), []);
+	const onClose = useCallback(() => setConfig(), []);
 
 	return (
 		<ErrorBoundary>
-			<Grid {...props}>
-				<Typography variant="h1">ONVIF</Typography>
-				<Form onSubmit={onSubmit} loading={loading} />
-				<ConfirmDialog open={Boolean(device)} data={device} onClose={onClose} />
+			<Grid container direction="column" rowGap={3} {...props}>
+				<Typography variant="h1">Create</Typography>
+				<OnvifDeviceForm
+					onSubmit={handleConfirm}
+					loading={connectLoading || createLoading}
+				/>
+				<ConfirmDialog
+					open={Boolean(config)}
+					onConfirm={handleSubmit}
+					onClose={onClose}
+					loading={connectLoading || createLoading}
+				/>
 			</Grid>
 		</ErrorBoundary>
 	);

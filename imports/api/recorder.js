@@ -1,8 +1,8 @@
+import {connect, getProfiles, getStream} from './camera';
 import {RECORDER, ENV} from '../config';
 import {CAMERA_STATE} from '../constants';
 import getDateString from '../utils/date-string';
 import {logInfo, logError} from '../utils/logger';
-import {connect, getProfiles, getStream} from './camera';
 import RtspRecorder, {RecorderEvents} from '@boonya/rtsp-video-recorder';
 import {EventEmitter} from 'events';
 
@@ -111,10 +111,10 @@ export default class Recorder {
 
 	stop(_id) {
 		const recorder = this.process.get(_id);
-		if (!recorder.isRecording()) {
+		if (!recorder?.isRecording()) {
 			return;
 		}
-		recorder.stop();
+		recorder?.stop();
 		this.process.set(_id, recorder);
 	}
 

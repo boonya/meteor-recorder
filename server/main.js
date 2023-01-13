@@ -1,7 +1,7 @@
-import CameraCollection from '../imports/api/camera';
-import Recorder, {Events} from '../imports/api/recorder';
-import {CAMERA_STATE} from '../imports/constants';
 import initMethods from './methods';
+import Recorder, {Events} from '../imports/api/recorder';
+import CameraCollection from '../imports/collections/camera';
+import {CAMERA_STATE} from '../imports/constants';
 import {Meteor} from 'meteor/meteor';
 
 Meteor.startup(() => {
