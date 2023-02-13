@@ -23,7 +23,7 @@
     "@emotion/styled": "^11.10.5",
     "@fontsource/pangolin": "^4.5.9",
     "@mui/icons-material": "^5.11.0",
-    "@mui/lab": "5.0.0-alpha.115",
+    "@mui/lab": "5.0.0-alpha.119",
     "@mui/material": "^5.11.4",
     "meteor-node-stubs": "^1.2.5",
     "notistack": "^2.0.8",
