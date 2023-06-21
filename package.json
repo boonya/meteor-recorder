@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.20.7",
+    "@boonya/rtsp-video-recorder": "^2.2.0-8f0e0cba63cfb6a1ec7fde0b5958fdfbea7a0186",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@fontsource/pangolin": "^4.5.9",
@@ -32,7 +33,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.42.0",
     "react-router-dom": "^6.6.2",
-    "rtsp-video-recorder": "^2.2.0"
+    "rtsp-video-recorder": "npm:@boonya/rtsp-video-recorder@^2.2.0-8f0e0cba63cfb6a1ec7fde0b5958fdfbea7a0186"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",
